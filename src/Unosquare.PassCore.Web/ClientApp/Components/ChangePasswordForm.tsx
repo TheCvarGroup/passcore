@@ -101,7 +101,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
     };
 
     return (
-        <FormGroup row={false} style={{ width: '80%', margin: '15px 0 0 10%' }}>
+        <FormGroup row={false} style={{ width: '80%', margin: '15px 0 0 10%', gap: '20px' }}>
             <TextField
                 autoFocus={true}
                 inputProps={{
@@ -114,8 +114,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 onChange={(e) => handleChange('Username', e.target.value)}
                 value={fields.Username}
                 sx={{
-                    height: '20px',
-                    margin: '15px 0 50px 0',
+                    marginBottom: '30px',
                 }}
                 fullWidth={true}
                 required
@@ -132,8 +131,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 type={showPasswords.current ? 'text' : 'password'}
                 value={fields.CurrentPassword}
                 sx={{
-                    height: '20px',
-                    marginBottom: '50px',
+                    marginBottom: '30px',
                 }}
                 fullWidth={true}
                 required
@@ -166,7 +164,6 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         type={showPasswords.new ? 'text' : 'password'}
                         value={fields.NewPassword}
                         sx={{
-                            height: '20px',
                             marginBottom: '30px',
                         }}
                         fullWidth={true}
@@ -202,8 +199,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         type={showPasswords.verify ? 'text' : 'password'}
                         value={fields.NewPasswordVerify}
                         sx={{
-                            height: '20px',
-                            marginBottom: '50px',
+                            marginBottom: '30px',
                         }}
                         fullWidth={true}
                         required
