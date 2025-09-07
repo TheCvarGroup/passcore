@@ -7,6 +7,7 @@
 *:star: Please star this project if you find it useful!*
 
 - [Overview](#overview)
+  - [🚀 2025 Modernization](#-2025-modernization)
   - [Features](#features)
 - [Installation on IIS](#installation-on-iis)
 - [PowerShell Installer](#powershell-installer)
@@ -23,11 +24,34 @@
 
 ## Overview
 
-PassCore is a very simple 1-page web application written in [C#](https://docs.microsoft.com/en-us/dotnet/csharp/), using [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/getting-started/), [Material UI (React Components)](https://material-ui.com/), and [Microsoft Directory Services](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices) (Default provider). 
+PassCore is a very simple 1-page web application written in [C#](https://docs.microsoft.com/en-us/dotnet/csharp/), using [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/getting-started/), [MUI (Material-UI React Components)](https://mui.com/), and [Microsoft Directory Services](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices) (Default provider). 
 
 It allows users to change their Active Directory/LDAP password on their own, provided the user is not disabled.
 
 PassCore does not require any configuration, as it obtains the principal context from the current domain. I wrote this because a number of people have requested several features that the [original version](http://unopasscore.codeplex.com/) did not have. The original version of this tool was downloaded around 8000 times in 2.5 years. My hope is that the new version continues to be just as popular. There really is no free alternative out there (that I know of) so hopefully this saves someone else some time and money.
+
+## 🚀 2025 Modernization
+
+**PassCore v5.0.0** has been completely modernized for 2025 standards:
+
+### Backend Modernization
+- ✅ **.NET 8 LTS** - Upgraded from .NET 6 to the latest LTS version
+- ✅ **Updated NuGet packages** - All dependencies updated to latest versions
+- ✅ **Modern C# features** - Using collection expressions and latest syntax
+- ✅ **Security audit** - No vulnerabilities found in any packages
+
+### Frontend Modernization  
+- ✅ **React 18** - Upgraded from React 16.14.0
+- ✅ **MUI v6** - Replaced deprecated Material-UI v4 with modern MUI
+- ✅ **TypeScript 5.6** - Updated from TypeScript 4.2
+- ✅ **Vite bundler** - Replaced deprecated Parcel with modern Vite
+- ✅ **Modern build system** - Faster builds and better development experience
+
+### Key Benefits
+- **🔒 Enhanced Security** - Latest security patches and modern dependencies
+- **⚡ Better Performance** - Modern bundling and optimized React 18
+- **🛠️ Developer Experience** - Modern tooling and faster development cycles
+- **🔮 Future-Proof** - Built on current industry standards for 2025+
 
 You can check [the wiki section](https://github.com/unosquare/passcore/wiki) for additional content related to development of this project.
 
@@ -53,12 +77,12 @@ PassCore has the following features:
 1. Ensure the server running IIS is domain-joined. To determine if the computer is domain-joined:
     - Go to the *Start* menu, right-click on *Computer*, then select *Properties*
     - Make sure the *Domain* field contains the correct setting.
-1. You need a Passcore copy to continue. We recommend to download the latest binary release of [PassCore](https://github.com/unosquare/passcore/releases/download/4.2.4/PassCore424.zip).
+1. You need a Passcore copy to continue. We recommend to download the latest binary release of [PassCore](https://github.com/unosquare/passcore/releases/download/5.0.0/PassCore500.zip).
 1. **NOTE:** Before extracting the contents of the file, please right-click on it, select Properties and make sure the file is Unblocked (Click on the Unblock button at the bottom of the dialog if it is available). Then, extract the contents of the zip file to the directory where you will be serving the website from.
     - If you download the source code you need to run the following command via an Command Prompt. Make sure you start the Command Prompt with the Administrator option.
     - `dotnet publish --configuration Release --runtime win-x64 --output "<path>"`
     - The `<path>` is the directory where you will be serving the website from.
-1. Install the [.NET Core 5.0.1 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-aspnetcore-5.0.1-windows-hosting-bundle-installer).
+1. Install the [.NET 8.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/8.0).
 1. Go to your *IIS Manager*, Right-click on *Application Pools* and select *Add Application Pool*.
 1. A dialog appears. Under Name enter **PassCore Application Pool**, Under .NET CLR Version select **No Managed Code** and finally, under Managed pipeline mode select **Integrated**. Click OK after all fields have been set.
 1. Now, right-click on the application pool you just created in the previous step and select *Advanced Settings ...*. Change the *Start Mode* to **AlwaysRunning**, and the *Idle Time-out (minutes)* to **0**. Click on *OK*. This will ensure PassCore stays responsive even after long periods of inactivity.
@@ -74,7 +98,7 @@ PassCore has the following features:
 
 ## PowerShell Installer
 
-Use PowerShell to download and setup Passcore using the following command line, just make sure you have installed the [.NET Core 5.0.1 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-aspnetcore-5.0.1-windows-hosting-bundle-installer) and enabled World Wide Web publishing service:
+Use PowerShell to download and setup Passcore using the following command line, just make sure you have installed the [.NET 8.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/8.0) and enabled World Wide Web publishing service:
 
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/unosquare/passcore/master/Installer.ps1'))
@@ -166,7 +190,7 @@ To run as a sub-application you need to modify the `base href="/"` value in the 
 
 ## Troubleshooting
 
-- At first run if you find an error (e.g. **HTTP Error 502.5**) first ensure you have installed [.NET Core 3.1.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/thank-you/dotnet-runtime-3.1.0-windows-hosting-bundle-installer), or better.
+- At first run if you find an error (e.g. **HTTP Error 502.5**) first ensure you have installed [.NET 8.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/8.0), or better.
 - If you find an [HTTP Error 500](https://stackoverflow.com/questions/45415832/http-error-500-19-in-iis-10-and-visual-studio-2017) you can try
   1. Press Win Key+R to Open Run Window
   1. in the Run Window, enter "OptionalFeatures.exe"

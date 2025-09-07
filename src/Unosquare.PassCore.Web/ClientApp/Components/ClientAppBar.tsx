@@ -1,8 +1,5 @@
-import AppBar from '@material-ui/core/AppBar/AppBar';
-import Grid from '@material-ui/core/Grid/Grid';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
-import Typography from '@material-ui/core/Typography/Typography';
-import HelpIcon from '@material-ui/icons/Help';
+import { AppBar, Grid, Tooltip, Typography } from '@mui/material';
+import { Help as HelpIcon } from '@mui/icons-material';
 import * as React from 'react';
 import { GlobalContext } from '../Provider/GlobalContext';
 
@@ -20,10 +17,10 @@ export const ClientAppBar: React.FunctionComponent<any> = () => {
             elevation={0}
         >
             <Grid
-                container={true}
+                container
                 style={{ height: '64px', width: '100%' }}
                 direction="row"
-                justify="space-between"
+                justifyContent="space-between"
                 alignItems="center"
             >
                 <Typography

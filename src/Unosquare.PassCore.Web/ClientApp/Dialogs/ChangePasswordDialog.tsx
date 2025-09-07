@@ -1,8 +1,4 @@
-import Button from '@material-ui/core/Button/Button';
-import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogContent from '@material-ui/core/DialogContent/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
-import Typography from '@material-ui/core/Typography/Typography';
+import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import * as React from 'react';
 import { GlobalContext } from '../Provider/GlobalContext';
 
@@ -17,7 +13,7 @@ export const ChangePasswordDialog: React.FunctionComponent<IChangePasswordDialog
 }: IChangePasswordDialogProps) => {
     const { successAlertBody, successAlertTitle } = React.useContext(GlobalContext).alerts;
     return (
-        <Dialog open={open} disableEscapeKeyDown={true} disableBackdropClick={true}>
+        <Dialog open={open} disableEscapeKeyDown={true}>
             <DialogTitle>{successAlertTitle}</DialogTitle>
             <DialogContent>
                 <Typography variant="subtitle1">{successAlertBody}</Typography>

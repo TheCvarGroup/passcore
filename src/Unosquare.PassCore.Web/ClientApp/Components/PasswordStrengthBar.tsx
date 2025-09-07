@@ -1,24 +1,6 @@
-import LinearProgress from '@material-ui/core/LinearProgress';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { LinearProgress } from '@mui/material';
 import * as React from 'react';
 import * as zxcvbn from 'zxcvbn';
-
-const useStyles = makeStyles({
-    progressBar: {
-        color: '#000000',
-        display: 'flex',
-        flexGrow: 1,
-    },
-    progressBarColorHigh: {
-        backgroundColor: '#4caf50',
-    },
-    progressBarColorLow: {
-        backgroundColor: '#ff5722',
-    },
-    progressBarColorMedium: {
-        backgroundColor: '#ffc107',
-    },
-});
 
 const measureStrength = (password: string): number =>
     Math.min(
@@ -32,26 +14,27 @@ interface IStrengthBarProps {
 }
 
 export const PasswordStrengthBar: React.FunctionComponent<IStrengthBarProps> = ({ newPassword }: IStrengthBarProps) => {
-    const classes = useStyles({});
-
-    const getProgressColor = (strength: number) => ({
-        barColorPrimary:
-            strength < 33
-                ? classes.progressBarColorLow
-                : strength < 66
-                ? classes.progressBarColorMedium
-                : classes.progressBarColorHigh,
-    });
+    const getProgressColor = (strength: number) => {
+        if (strength < 33) return '#ff5722';
+        if (strength < 66) return '#ffc107';
+        return '#4caf50';
+    };
 
     const newStrength = measureStrength(newPassword);
-    const primeColor = getProgressColor(newStrength);
+    const progressColor = getProgressColor(newStrength);
 
     return (
         <LinearProgress
-            classes={primeColor}
             variant="determinate"
             value={newStrength}
-            className={classes.progressBar}
+            sx={{
+                color: '#000000',
+                display: 'flex',
+                flexGrow: 1,
+                '& .MuiLinearProgress-bar': {
+                    backgroundColor: progressColor,
+                },
+            }}
         />
     );
 };

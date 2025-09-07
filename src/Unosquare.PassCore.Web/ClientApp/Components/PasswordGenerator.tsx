@@ -1,11 +1,6 @@
-import IconButton from '@material-ui/core/IconButton/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment/InputAdornment';
-import TextField from '@material-ui/core/TextField/TextField';
-import FileCopy from '@material-ui/icons/FileCopy';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { IconButton, InputAdornment, TextField, CircularProgress } from '@mui/material';
+import { FileCopy, Visibility, VisibilityOff } from '@mui/icons-material';
 import * as React from 'react';
-import { LoadingIcon } from 'uno-material-ui/dist/LoadingIcon';
 import { SnackbarContext } from '../Provider/GlobalContext';
 import { IPasswordGenProps } from '../types/Components';
 import { fetchRequest } from '../Utils/FetchRequest';
@@ -41,7 +36,7 @@ export const PasswordGenerator: React.FunctionComponent<IPasswordGenProps> = ({
 
     return isLoading ? (
         <div style={{ paddingTop: '30px' }}>
-            <LoadingIcon />
+            <CircularProgress />
         </div>
     ) : (
         <TextField
@@ -50,7 +45,7 @@ export const PasswordGenerator: React.FunctionComponent<IPasswordGenProps> = ({
             label="New Password"
             value={value}
             type={visibility ? 'text' : 'Password'}
-            style={{
+            sx={{
                 height: '20px',
                 margin: '30px 0 30px 0',
             }}

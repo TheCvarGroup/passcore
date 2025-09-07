@@ -1,7 +1,5 @@
-import Button from '@material-ui/core/Button/Button';
-import Paper from '@material-ui/core/Paper/Paper';
+import { Button, Paper } from '@mui/material';
 import * as React from 'react';
-import { ValidatorForm } from 'uno-react';
 import { ChangePasswordDialog } from '../Dialogs/ChangePasswordDialog';
 import { GlobalContext, SnackbarContext } from '../Provider/GlobalContext';
 import { fetchRequest } from '../Utils/FetchRequest';
@@ -18,7 +16,10 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
     const { sendMessage } = React.useContext(SnackbarContext);
     const [shouldReset, setReset] = React.useState(false);
 
-    const onSubmitValidatorForm = () => setSubmit(true);
+    const onSubmitForm = (event: React.FormEvent) => {
+        event.preventDefault();
+        setSubmit(true);
+    };
 
     const toSubmitData = (formData: {}) => {
         setDisabled(true);
@@ -87,16 +88,6 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
 
     const marginButton = recaptcha.siteKey && recaptcha.siteKey !== '' ? '25px 0 0 180px' : '100px 0 0 180px';
 
-    ValidatorForm.addValidationRule('isUserName', (value: string) =>
-        new RegExp(validationRegex.usernameRegex).test(value),
-    );
-
-    ValidatorForm.addValidationRule('isUserEmail', (value: string) =>
-        new RegExp(validationRegex.emailRegex).test(value),
-    );
-
-    ValidatorForm.addValidationRule('isPasswordMatch', (value: string, comparedValue: any) => value === comparedValue);
-
     return (
         <>
             <Paper
@@ -109,11 +100,10 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
                 }}
                 elevation={6}
             >
-                <ValidatorForm
+                <form
                     ref={validatorFormRef}
                     autoComplete="off"
-                    instantValidate={true}
-                    onSubmit={onSubmitValidatorForm}
+                    onSubmit={onSubmitForm}
                 >
                     <ChangePasswordForm
                         submitData={submit}
@@ -137,7 +127,7 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
                     >
                         {changePasswordButtonLabel}
                     </Button>
-                </ValidatorForm>
+                </form>
             </Paper>
             <ChangePasswordDialog open={dialogIsOpen} onClose={onCloseDialog} />
         </>

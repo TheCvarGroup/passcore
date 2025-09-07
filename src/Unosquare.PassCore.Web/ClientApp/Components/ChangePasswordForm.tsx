@@ -1,7 +1,5 @@
-import FormGroup from '@material-ui/core/FormGroup/FormGroup';
+import { FormGroup, TextField } from '@mui/material';
 import * as React from 'react';
-import { TextValidator } from 'uno-material-ui';
-import { useStateForModel } from 'uno-react';
 import { GlobalContext } from '../Provider/GlobalContext';
 import { IChangePasswordFormInitialModel, IChangePasswordFormProps } from '../types/Components';
 import { PasswordGenerator } from './PasswordGenerator';
@@ -26,7 +24,11 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
     setReCaptchaToken,
     ReCaptchaToken,
 }: IChangePasswordFormProps) => {
-    const [fields, handleChange] = useStateForModel({ ...defaultState });
+    const [fields, setFields] = React.useState({ ...defaultState });
+    
+    const handleChange = (field: string, value: string) => {
+        setFields(prev => ({ ...prev, [field]: value }));
+    };
 
     const { changePasswordForm, errorsPasswordForm, usePasswordGeneration, useEmail, showPasswordMeter, recaptcha } =
         React.useContext(GlobalContext);
@@ -69,23 +71,22 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
 
     React.useEffect(() => {
         if (shouldReset) {
-            handleChange({ ...defaultState });
+            setFields({ ...defaultState });
             changeResetState(false);
-            if (parentRef.current && parentRef.current.resetValidations) {
-                parentRef.current.resetValidations();
-            }
         }
     }, [shouldReset]);
 
-    const setGenerated = (password: any) =>
-        handleChange({
+    const setGenerated = (password: any) => {
+        setFields(prev => ({
+            ...prev,
             NewPassword: password,
             NewPasswordVerify: password,
-        });
+        }));
+    };
 
     return (
         <FormGroup row={false} style={{ width: '80%', margin: '15px 0 0 10%' }}>
-            <TextValidator
+            <TextField
                 autoFocus={true}
                 inputProps={{
                     tabIndex: 1,
@@ -94,17 +95,16 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 label={usernameLabel}
                 helperText={userNameHelperText}
                 name="Username"
-                onChange={handleChange}
-                validators={userNameValidations}
+                onChange={(e) => handleChange('Username', e.target.value)}
                 value={fields.Username}
-                style={{
+                sx={{
                     height: '20px',
                     margin: '15px 0 50px 0',
                 }}
                 fullWidth={true}
-                errorMessages={userNameErrorMessages}
+                required
             />
-            <TextValidator
+            <TextField
                 inputProps={{
                     tabIndex: 2,
                 }}
@@ -112,45 +112,43 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 helperText={currentPasswordHelpblock}
                 id="CurrentPassword"
                 name="CurrentPassword"
-                onChange={handleChange}
+                onChange={(e) => handleChange('CurrentPassword', e.target.value)}
                 type="password"
-                validators={['required']}
                 value={fields.CurrentPassword}
-                style={{
+                sx={{
                     height: '20px',
                     marginBottom: '50px',
                 }}
                 fullWidth={true}
-                errorMessages={[fieldRequired]}
+                required
             />
             {usePasswordGeneration ? (
                 <PasswordGenerator value={fields.NewPassword} setValue={setGenerated} />
             ) : (
                 <>
-                    <TextValidator
+                    <TextField
                         inputProps={{
                             tabIndex: 3,
                         }}
                         label={newPasswordLabel}
                         id="NewPassword"
                         name="NewPassword"
-                        onChange={handleChange}
+                        onChange={(e) => handleChange('NewPassword', e.target.value)}
                         type="password"
-                        validators={['required']}
                         value={fields.NewPassword}
-                        style={{
+                        sx={{
                             height: '20px',
                             marginBottom: '30px',
                         }}
                         fullWidth={true}
-                        errorMessages={[fieldRequired]}
+                        required
                     />
                     {showPasswordMeter && <PasswordStrengthBar newPassword={fields.NewPassword} />}
                     <div
                         dangerouslySetInnerHTML={{ __html: newPasswordHelpblock }}
                         style={{ font: '12px Roboto,Helvetica, Arial, sans-serif', marginBottom: '15px' }}
                     />
-                    <TextValidator
+                    <TextField
                         inputProps={{
                             tabIndex: 4,
                         }}
@@ -158,16 +156,16 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         helperText={newPasswordVerifyHelpblock}
                         id="NewPasswordVerify"
                         name="NewPasswordVerify"
-                        onChange={handleChange}
+                        onChange={(e) => handleChange('NewPasswordVerify', e.target.value)}
                         type="password"
-                        validators={['required', `isPasswordMatch:${fields.NewPassword}`]}
                         value={fields.NewPasswordVerify}
-                        style={{
+                        sx={{
                             height: '20px',
                             marginBottom: '50px',
                         }}
                         fullWidth={true}
-                        errorMessages={[fieldRequired, passwordMatch]}
+                        required
+                        error={fields.NewPasswordVerify !== '' && fields.NewPasswordVerify !== fields.NewPassword}
                     />
                 </>
             )}

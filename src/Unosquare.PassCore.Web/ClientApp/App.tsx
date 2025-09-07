@@ -1,13 +1,11 @@
 import './vendor';
 
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
+import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 import * as React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Main } from './Main';
 
-const theme = createMuiTheme({
+const theme = createTheme({
     palette: {
         error: {
             main: '#f44336',
@@ -30,9 +28,11 @@ const theme = createMuiTheme({
 
 const passcoreTheme = responsiveFontSizes(theme);
 
-render(
+const container = document.getElementById('rootNode');
+const root = createRoot(container!);
+
+root.render(
     <ThemeProvider theme={passcoreTheme}>
         <Main />
-    </ThemeProvider>,
-    document.getElementById('rootNode'),
+    </ThemeProvider>
 );

@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<DefaultItemExcludes>$(DefaultItemExcludes);**\node_modules\**;node_modules\**</DefaultItemExcludes>
 		<Copyright>Copyright (c) 2018-2021 - Unosquare</Copyright>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<AssemblyName>Unosquare.PassCore.Web</AssemblyName>
 		<PackageId>Unosquare.PassCore.Web</PackageId>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
@@ -17,7 +17,7 @@
 		<NullableReferenceTypes>true</NullableReferenceTypes>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.6.4">
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.6.3">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -53,12 +53,12 @@
 		<Exec Command="node --version" ContinueOnError="true">
 			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
 		</Exec>
-		<Exec Command="npm install --force" WorkingDirectory=".\ClientApp" />
+		<Exec Command="npm install" WorkingDirectory=".\ClientApp" />
 		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
 		<Message Importance="high" Text="Performing first-run npm install..." />
 	</Target>
-	<Target Name="Parcel" DependsOnTargets="NpmInstall" BeforeTargets="Build">
-		<Message Importance="high" Text="Performing run Parcel build..." />
+	<Target Name="Vite" DependsOnTargets="NpmInstall" BeforeTargets="Build">
+		<Message Importance="high" Text="Performing Vite build..." />
 		<Exec Command="npm run build" WorkingDirectory=".\ClientApp" />
 	</Target>
 </Project>

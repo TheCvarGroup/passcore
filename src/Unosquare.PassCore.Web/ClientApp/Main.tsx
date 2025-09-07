@@ -1,8 +1,5 @@
-import Grid from '@material-ui/core/Grid/Grid';
-import Typography from '@material-ui/core/Typography/Typography';
+import { Grid, Typography, CircularProgress } from '@mui/material';
 import * as React from 'react';
-import { LoadingIcon } from 'uno-material-ui';
-import { useEffectWithLoading } from 'uno-react';
 import { EntryPoint } from './Components/EntryPoint';
 import { loadReCaptcha } from './Components/GoogleReCaptcha';
 import { GlobalContextProvider } from './Provider/GlobalContextProvider';
@@ -10,7 +7,22 @@ import { SnackbarContextProvider } from './Provider/SnackbarContextProvider';
 import { resolveAppSettings } from './Utils/AppSettings';
 
 export const Main: React.FunctionComponent<any> = () => {
-    const [settings, isLoading] = useEffectWithLoading(resolveAppSettings, {}, []);
+    const [settings, setSettings] = React.useState(null);
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const loadSettings = async () => {
+            try {
+                const appSettings = await resolveAppSettings();
+                setSettings(appSettings);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Failed to load app settings:', error);
+                setIsLoading(false);
+            }
+        };
+        loadSettings();
+    }, []);
 
     React.useEffect(() => {
         if (settings && settings.recaptcha) {
@@ -22,14 +34,14 @@ export const Main: React.FunctionComponent<any> = () => {
 
     if (isLoading) {
         return (
-            <Grid container={true} alignItems="center" direction="column" justify="center">
-                <Grid item={true} key="title">
+            <Grid container alignItems="center" direction="column" justifyContent="center" sx={{ minHeight: '100vh' }}>
+                <Grid item key="title">
                     <Typography variant="h3" align="center">
                         Loading Passcore...
                     </Typography>
                 </Grid>
-                <Grid item={true}>
-                    <LoadingIcon />
+                <Grid item>
+                    <CircularProgress />
                 </Grid>
             </Grid>
         );
