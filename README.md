@@ -105,6 +105,7 @@ PassCore has the following features:
    ```
    - The `<path>` is the directory where you will be serving the website from.
    - Make sure you run this command with Administrator privileges.
+   - **Note**: Node.js and npm are required during the build process to compile the frontend assets, but can be removed from the server after deployment.
 1. Install the [.NET 8.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/8.0).
 1. Go to your *IIS Manager*, Right-click on *Application Pools* and select *Add Application Pool*.
 1. A dialog appears. Under Name enter **PassCore Application Pool**, Under .NET CLR Version select **No Managed Code** and finally, under Managed pipeline mode select **Integrated**. Click OK after all fields have been set.
