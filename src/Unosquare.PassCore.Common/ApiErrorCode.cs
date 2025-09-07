@@ -71,7 +71,7 @@ public enum ApiErrorCode
     PwnedPassword = 12,
 
     /// <summary>
-    /// The password contains blacklisted words
+    /// The password contains disallowed words
     /// </summary>
-    BlacklistedPassword = 13,
+    DisallowedPassword = 13,
 }

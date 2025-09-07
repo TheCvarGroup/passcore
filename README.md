@@ -28,7 +28,7 @@ This fork ensures that PassCore remains viable and secure for organizations that
 - [Linux](#linux)
 - [LDAP Provider](#ldap-provider)
 - [Pwned Password Support](#pwned-password-support)
-- [Password Blacklist](#password-blacklist)
+- [Password Disallowed Words](#password-disallowed-words)
 - [Customization and Configuration](#customization-and-configuration)
   - [Running as a sub application](#running-as-a-sub-application)
 - [Troubleshooting](#troubleshooting)
@@ -155,21 +155,21 @@ Sometimes a simple set of checks and some custom logic is enough to rule out non
 
 Here is where Pwned Password API comes into play. Pwned Passwords are more than half a billion passwords which have previously been exposed in different data breaches along the years. The use of this service is free and secure. You can read more about this service in [Pwned Passwords overview](https://haveibeenpwned.com/API/v2#PwnedPasswords)
 
-## Password Blacklist
+## Password Disallowed Words
 
-PassCore includes a configurable password blacklist feature that prevents users from using common, weak, or organization-specific words in their passwords. This feature is more flexible than the previous file-based approach and integrates seamlessly with the application configuration.
+PassCore includes a configurable password disallowed words feature that prevents users from using common, weak, or organization-specific words in their passwords. This feature is more flexible than the previous file-based approach and integrates seamlessly with the application configuration.
 
 ### Configuration
 
-The password blacklist is configured in the `appsettings.json` file under the `ClientSettings.PasswordBlacklist` section:
+The password disallowed words feature is configured in the `appsettings.json` file under the `ClientSettings.PasswordDisallowed` section:
 
 ```json
 {
   "ClientSettings": {
-    "PasswordBlacklist": {
+    "PasswordDisallowed": {
       "Enabled": true,
       "CaseSensitive": false,
-      "BlacklistedWords": [
+      "DisallowedWords": [
         "password",
         "123456",
         "qwerty",
@@ -198,23 +198,23 @@ The password blacklist is configured in the `appsettings.json` file under the `C
 
 ### Configuration Options
 
-- **`Enabled`**: Set to `true` to enable password blacklist validation, `false` to disable
+- **`Enabled`**: Set to `true` to enable password disallowed words validation, `false` to disable
 - **`CaseSensitive`**: Set to `true` for case-sensitive matching, `false` for case-insensitive (recommended)
-- **`BlacklistedWords`**: Array of words/phrases that cannot be contained in passwords
+- **`DisallowedWords`**: Array of words/phrases that cannot be contained in passwords
 
 ### How It Works
 
-- The blacklist validation occurs during password change attempts
-- If a password contains any blacklisted word (as a substring), the change will be rejected
+- The disallowed words validation occurs during password change attempts
+- If a password contains any disallowed word (as a substring), the change will be rejected
 - The validation is case-insensitive by default for better security
-- Users receive a clear error message when their password is rejected due to blacklisted content
+- Users receive a clear error message when their password is rejected due to disallowed content
 
 ### Benefits Over File-Based Approach
 
 ✅ **Centralized Configuration** - All settings in one place  
-✅ **Environment-Specific** - Different blacklists for dev/staging/prod  
+✅ **Environment-Specific** - Different disallowed word lists for dev/staging/prod  
 ✅ **No File System Dependencies** - No need to manage external files  
-✅ **Version Control** - Blacklist changes tracked in Git  
+✅ **Version Control** - Disallowed word list changes tracked in Git  
 ✅ **Hot Reload** - Changes can be applied without redeployment  
 ✅ **JSON Validation** - Configuration errors caught early
 

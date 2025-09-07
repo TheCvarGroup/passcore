@@ -105,11 +105,11 @@ public class PasswordController : Controller
                 return BadRequest(result);
             }
 
-            // Validate against password blacklist
-            if (_options.PasswordBlacklist?.Enabled == true &&
-                IsPasswordBlacklisted(model.NewPassword, _options.PasswordBlacklist))
+            // Validate against password disallowed words
+            if (_options.PasswordDisallowed?.Enabled == true &&
+                IsPasswordDisallowed(model.NewPassword, _options.PasswordDisallowed))
             {
-                result.Errors.Add(new ApiErrorItem(ApiErrorCode.BlacklistedPassword));
+                result.Errors.Add(new ApiErrorItem(ApiErrorCode.DisallowedPassword));
                 return BadRequest(result);
             }
 
@@ -149,16 +149,16 @@ public class PasswordController : Controller
         return Convert.ToBoolean(validationResponse["success"], System.Globalization.CultureInfo.InvariantCulture);
     }
 
-    private static bool IsPasswordBlacklisted(string password, PasswordBlacklist blacklist)
+    private static bool IsPasswordDisallowed(string password, PasswordDisallowed disallowed)
     {
-        if (blacklist.BlacklistedWords == null || blacklist.BlacklistedWords.Length == 0)
+        if (disallowed.DisallowedWords == null || disallowed.DisallowedWords.Length == 0)
             return false;
 
-        var passwordToCheck = blacklist.CaseSensitive ? password : password.ToLowerInvariant();
+        var passwordToCheck = disallowed.CaseSensitive ? password : password.ToLowerInvariant();
 
-        return blacklist.BlacklistedWords.Any(blacklistedWord =>
+        return disallowed.DisallowedWords.Any(disallowedWord =>
         {
-            var wordToCheck = blacklist.CaseSensitive ? blacklistedWord : blacklistedWord.ToLowerInvariant();
+            var wordToCheck = disallowed.CaseSensitive ? disallowedWord : disallowedWord.ToLowerInvariant();
             return passwordToCheck.Contains(wordToCheck, StringComparison.Ordinal);
         });
     }
