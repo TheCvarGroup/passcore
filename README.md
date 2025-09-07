@@ -33,7 +33,6 @@ This fork ensures that PassCore remains viable and secure for organizations that
 - [Troubleshooting](#troubleshooting)
   - [LDAP Support](#ldap-support)
 - [License](#license)
-- [passcorepro](#passcorepro)
 
 ## Overview
 
@@ -122,7 +121,7 @@ PassCore has the following features:
 
 
 ## Linux
-We recommend use the docker image and redirect the traffic to nginx.
+We recommend using the docker image and redirecting the traffic to nginx.
 
 ## Docker
 
@@ -227,18 +226,3 @@ icacls "<logfolder>/" /grant "IIS AppPool\<passcoreAppPoolAccount>:M" /t
 
 PassCore is open source software and MIT licensed. Please star this project if you like it.
 
-## passcorepro
-
-PassCore is free and will continue to be free forever.
-However, you can access a complete, brand new version with new features and tools.
-
-Introducing passcorepro.
-This new, enhanced version of our self-service password manager comes with new features such as:
-
-*	Display and manage your Active Directory information with our user profile system.
-*	Search for any staff member with the new Directory grid.
-*	Forgot your password? We help you reset it via Email or SMS (via [Twillio Verify API](https://www.twilio.com/docs/verify/api) or custom SMS Gateway).
-*	Administrate your AD using our new Dashboard tool.
-*	Parlez-vous français? You can now add any language to PassCorePro!
-
-Go to our store and download a free trial: https://store.unosquare.com/PasscorePro
