@@ -18,7 +18,6 @@ const defaultState: IChangePasswordFormInitialModel = {
 export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProps> = ({
     submitData,
     toSubmitData,
-    parentRef,
     onValidated,
     shouldReset,
     changeResetState,
@@ -70,17 +69,21 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
         }
     }, [submitData]);
 
+    // Form validation logic
+    const isFormValid = () => {
+        const hasCurrentPassword = fields.CurrentPassword && fields.CurrentPassword.trim() !== '';
+        const hasNewPassword = fields.NewPassword && fields.NewPassword.trim() !== '';
+        const hasVerifyPassword = fields.NewPasswordVerify && fields.NewPasswordVerify.trim() !== '';
+        const passwordsMatch = fields.NewPassword === fields.NewPasswordVerify;
+        const recaptchaValid = !recaptcha.siteKey || recaptcha.siteKey === '' || ReCaptchaToken !== '';
+        
+        return hasCurrentPassword && hasNewPassword && hasVerifyPassword && passwordsMatch && recaptchaValid;
+    };
+
     React.useEffect(() => {
-        if (parentRef.current !== null && parentRef.current.isFormValid !== null) {
-            parentRef.current.isFormValid().then((response: any) => {
-                let validated = response;
-                if (recaptcha.siteKey && recaptcha.siteKey !== '') {
-                    validated = validated && ReCaptchaToken !== '';
-                }
-                onValidated(!validated);
-            });
-        }
-    });
+        const validated = isFormValid();
+        onValidated(!validated);
+    }, [fields.CurrentPassword, fields.NewPassword, fields.NewPasswordVerify, ReCaptchaToken]);
 
     React.useEffect(() => {
         if (shouldReset) {

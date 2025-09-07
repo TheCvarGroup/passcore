@@ -10,7 +10,6 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
     const [submit, setSubmit] = React.useState(false);
     const [dialogIsOpen, setDialog] = React.useState(false);
     const [token, setToken] = React.useState('');
-    const validatorFormRef = React.useRef(null);
     const { alerts, changePasswordForm, recaptcha, validationRegex } = React.useContext(GlobalContext);
     const { changePasswordButtonLabel } = changePasswordForm;
     const { sendMessage } = React.useContext(SnackbarContext);
@@ -101,14 +100,12 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
                 elevation={6}
             >
                 <form
-                    ref={validatorFormRef}
                     autoComplete="off"
                     onSubmit={onSubmitForm}
                 >
                     <ChangePasswordForm
                         submitData={submit}
                         toSubmitData={toSubmitData}
-                        parentRef={validatorFormRef}
                         onValidated={setDisabled}
                         shouldReset={shouldReset}
                         changeResetState={setReset}

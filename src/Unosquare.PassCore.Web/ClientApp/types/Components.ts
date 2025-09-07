@@ -9,7 +9,6 @@ export interface IChangePasswordFormInitialModel {
 export interface IChangePasswordFormProps {
     submitData: boolean;
     toSubmitData: any;
-    parentRef: any;
     onValidated: any;
     shouldReset: boolean;
     changeResetState: any;
