@@ -62,11 +62,6 @@ PassCore does not require any configuration, as it obtains the principal context
 - ✅ **Vite bundler** - Replaced deprecated Parcel with modern Vite
 - ✅ **Modern build system** - Faster builds and better development experience
 
-### Key Benefits
-- **🔒 Enhanced Security** - Latest security patches and modern dependencies
-- **⚡ Better Performance** - Modern bundling and optimized React 18
-- **🛠️ Developer Experience** - Modern tooling and faster development cycles
-- **🔮 Future-Proof** - Built on current industry standards for 2025+
 
 
 ### Features
@@ -78,6 +73,10 @@ PassCore has the following features:
 - Has a built-in password meter
 - Has a password generator
 - Has a server-side password entropy meter
+- **🆕 Show/Hide Password Toggle** - Toggle visibility for all password fields to verify correct typing
+- **🆕 Password Disallowed Words** - Configurable list of words that cannot be used in passwords
+- **🆕 Modern UI Components** - Updated to MUI v6 with improved accessibility and design
+- **🆕 Enhanced Security** - Latest .NET 8 LTS with updated dependencies and security patches
 
 - Responsive design that works on mobiles, tablets, and desktops.
 - Works with Windows/Linux servers.
