@@ -209,14 +209,6 @@ The password disallowed words feature is configured in the `appsettings.json` fi
 - The validation is case-insensitive by default for better security
 - Users receive a clear error message when their password is rejected due to disallowed content
 
-### Benefits Over File-Based Approach
-
-✅ **Centralized Configuration** - All settings in one place  
-✅ **Environment-Specific** - Different disallowed word lists for dev/staging/prod  
-✅ **No File System Dependencies** - No need to manage external files  
-✅ **Version Control** - Disallowed word list changes tracked in Git  
-✅ **Hot Reload** - Changes can be applied without redeployment  
-✅ **JSON Validation** - Configuration errors caught early
 
 ## Customization and Configuration
 
