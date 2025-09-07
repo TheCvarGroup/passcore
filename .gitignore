@@ -204,3 +204,4 @@ FakesAssemblies/
 
 # AOT results
 aot/*
+.DS_Store

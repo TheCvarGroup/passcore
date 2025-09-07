@@ -6,6 +6,20 @@
 
 *:star: Please star this project if you find it useful!*
 
+## 📋 Project Status & History
+
+**Important Note**: The original PassCore project was **archived by Unosquare in 2022** and is no longer actively maintained. This repository represents a **community-driven modernization effort** to bring PassCore up to current 2025 standards.
+
+### What This Fork Provides:
+- ✅ **Complete modernization** to current technology standards
+- ✅ **Security updates** and vulnerability patches
+- ✅ **Performance improvements** with modern tooling
+- ✅ **Continued support** for a valuable open-source tool
+- ✅ **MIT License maintained** - free for commercial and personal use
+
+This fork ensures that PassCore remains viable and secure for organizations that depend on it for self-service password management.
+
+- [📋 Project Status & History](#-project-status--history)
 - [Overview](#overview)
   - [🚀 2025 Modernization](#-2025-modernization)
   - [Features](#features)
@@ -28,7 +42,9 @@ PassCore is a very simple 1-page web application written in [C#](https://docs.mi
 
 It allows users to change their Active Directory/LDAP password on their own, provided the user is not disabled.
 
-PassCore does not require any configuration, as it obtains the principal context from the current domain. I wrote this because a number of people have requested several features that the [original version](http://unopasscore.codeplex.com/) did not have. The original version of this tool was downloaded around 8000 times in 2.5 years. My hope is that the new version continues to be just as popular. There really is no free alternative out there (that I know of) so hopefully this saves someone else some time and money.
+PassCore does not require any configuration, as it obtains the principal context from the current domain. The original version of this tool was downloaded around 8000 times in 2.5 years and was widely used in enterprise environments.
+
+**Note**: After Unosquare archived the project in 2022, this fork was created to modernize PassCore and ensure it remains viable for organizations that depend on it. The modernization effort brings the project up to current 2025 standards while maintaining full compatibility with existing deployments.
 
 ## 🚀 2025 Modernization
 
