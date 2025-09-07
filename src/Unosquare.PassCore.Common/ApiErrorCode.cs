@@ -69,4 +69,9 @@ public enum ApiErrorCode
     /// The password is in Pwned database
     /// </summary>
     PwnedPassword = 12,
+
+    /// <summary>
+    /// The password contains blacklisted words
+    /// </summary>
+    BlacklistedPassword = 13,
 }

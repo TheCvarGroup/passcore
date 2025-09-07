@@ -28,6 +28,7 @@ This fork ensures that PassCore remains viable and secure for organizations that
 - [Linux](#linux)
 - [LDAP Provider](#ldap-provider)
 - [Pwned Password Support](#pwned-password-support)
+- [Password Blacklist](#password-blacklist)
 - [Customization and Configuration](#customization-and-configuration)
   - [Running as a sub application](#running-as-a-sub-application)
 - [Troubleshooting](#troubleshooting)
@@ -153,6 +154,69 @@ The configuration of the LDAP Provider is slightly different. for example, the A
 Sometimes a simple set of checks and some custom logic is enough to rule out non-secure trivial passwords. Those checks are always performed locally. There are, however, many more unsafe passwords that cannot be ruled out programatically. For those cases there are no simple set of rules that could be used to check those passwords that should never be used: You either need a local DB with a list of banned passwords or use an external API service.
 
 Here is where Pwned Password API comes into play. Pwned Passwords are more than half a billion passwords which have previously been exposed in different data breaches along the years. The use of this service is free and secure. You can read more about this service in [Pwned Passwords overview](https://haveibeenpwned.com/API/v2#PwnedPasswords)
+
+## Password Blacklist
+
+PassCore includes a configurable password blacklist feature that prevents users from using common, weak, or organization-specific words in their passwords. This feature is more flexible than the previous file-based approach and integrates seamlessly with the application configuration.
+
+### Configuration
+
+The password blacklist is configured in the `appsettings.json` file under the `ClientSettings.PasswordBlacklist` section:
+
+```json
+{
+  "ClientSettings": {
+    "PasswordBlacklist": {
+      "Enabled": true,
+      "CaseSensitive": false,
+      "BlacklistedWords": [
+        "password",
+        "123456",
+        "qwerty",
+        "admin",
+        "letmein",
+        "welcome",
+        "monkey",
+        "dragon",
+        "master",
+        "hello",
+        "login",
+        "abc123",
+        "password123",
+        "admin123",
+        "root",
+        "toor",
+        "pass",
+        "test",
+        "user",
+        "guest"
+      ]
+    }
+  }
+}
+```
+
+### Configuration Options
+
+- **`Enabled`**: Set to `true` to enable password blacklist validation, `false` to disable
+- **`CaseSensitive`**: Set to `true` for case-sensitive matching, `false` for case-insensitive (recommended)
+- **`BlacklistedWords`**: Array of words/phrases that cannot be contained in passwords
+
+### How It Works
+
+- The blacklist validation occurs during password change attempts
+- If a password contains any blacklisted word (as a substring), the change will be rejected
+- The validation is case-insensitive by default for better security
+- Users receive a clear error message when their password is rejected due to blacklisted content
+
+### Benefits Over File-Based Approach
+
+✅ **Centralized Configuration** - All settings in one place  
+✅ **Environment-Specific** - Different blacklists for dev/staging/prod  
+✅ **No File System Dependencies** - No need to manage external files  
+✅ **Version Control** - Blacklist changes tracked in Git  
+✅ **Hot Reload** - Changes can be applied without redeployment  
+✅ **JSON Validation** - Configuration errors caught early
 
 ## Customization and Configuration
 

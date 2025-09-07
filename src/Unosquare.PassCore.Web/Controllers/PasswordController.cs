@@ -105,6 +105,14 @@ public class PasswordController : Controller
                 return BadRequest(result);
             }
 
+            // Validate against password blacklist
+            if (_options.PasswordBlacklist?.Enabled == true &&
+                IsPasswordBlacklisted(model.NewPassword, _options.PasswordBlacklist))
+            {
+                result.Errors.Add(new ApiErrorItem(ApiErrorCode.BlacklistedPassword));
+                return BadRequest(result);
+            }
+
             var resultPasswordChange = _passwordChangeProvider.PerformPasswordChange(
                 model.Username,
                 model.CurrentPassword,
@@ -139,5 +147,19 @@ public class PasswordController : Controller
         var validationResponse = await JsonClient.Get<Dictionary<string, object>>(requestUrl);
 
         return Convert.ToBoolean(validationResponse["success"], System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static bool IsPasswordBlacklisted(string password, PasswordBlacklist blacklist)
+    {
+        if (blacklist.BlacklistedWords == null || blacklist.BlacklistedWords.Length == 0)
+            return false;
+
+        var passwordToCheck = blacklist.CaseSensitive ? password : password.ToLowerInvariant();
+
+        return blacklist.BlacklistedWords.Any(blacklistedWord =>
+        {
+            var wordToCheck = blacklist.CaseSensitive ? blacklistedWord : blacklistedWord.ToLowerInvariant();
+            return passwordToCheck.Contains(wordToCheck, StringComparison.Ordinal);
+        });
     }
 }

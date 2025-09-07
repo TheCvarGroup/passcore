@@ -20,6 +20,7 @@ public class ClientSettings
     public string? ApplicationTitle { get; set; }
     public string? ChangePasswordTitle { get; set; }
     public ValidationRegex? ValidationRegex { get; set; }
+    public PasswordBlacklist? PasswordBlacklist { get; set; }
 }
 
 public class Recaptcha
@@ -47,6 +48,7 @@ public class Alerts
     public string? ErrorScorePassword { get; set; }
     public string? ErrorDistancePassword { get; set; }
     public string? ErrorPwnedPassword { get; set; }
+    public string? ErrorBlacklistedPassword { get; set; }
 }
 
 public class ErrorsPasswordForm
@@ -61,4 +63,11 @@ public class ValidationRegex
 {
     public string? EmailRegex { get; set; }
     public string? UsernameRegex { get; set; }
+}
+
+public class PasswordBlacklist
+{
+    public bool Enabled { get; set; }
+    public bool CaseSensitive { get; set; }
+    public string[] BlacklistedWords { get; set; } = [];
 }
