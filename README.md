@@ -24,7 +24,6 @@ This fork ensures that PassCore remains viable and secure for organizations that
   - [🚀 2025 Modernization](#-2025-modernization)
   - [Features](#features)
 - [Installation on IIS](#installation-on-iis)
-- [PowerShell Installer](#powershell-installer)
 - [Docker](#docker)
 - [Linux](#linux)
 - [LDAP Provider](#ldap-provider)
@@ -69,7 +68,6 @@ PassCore does not require any configuration, as it obtains the principal context
 - **🛠️ Developer Experience** - Modern tooling and faster development cycles
 - **🔮 Future-Proof** - Built on current industry standards for 2025+
 
-You can check [the wiki section](https://github.com/unosquare/passcore/wiki) for additional content related to development of this project.
 
 ### Features
 
@@ -88,16 +86,26 @@ PassCore has the following features:
 
 ## Installation on IIS
 
-*You can easily install using Powershell. Check the next section to know how.*
+### Prerequisites
 
 1. Ensure the server running IIS is domain-joined. To determine if the computer is domain-joined:
     - Go to the *Start* menu, right-click on *Computer*, then select *Properties*
     - Make sure the *Domain* field contains the correct setting.
-1. You need a Passcore copy to continue. We recommend to download the latest binary release of [PassCore](https://github.com/unosquare/passcore/releases/download/5.0.0/PassCore500.zip).
-1. **NOTE:** Before extracting the contents of the file, please right-click on it, select Properties and make sure the file is Unblocked (Click on the Unblock button at the bottom of the dialog if it is available). Then, extract the contents of the zip file to the directory where you will be serving the website from.
-    - If you download the source code you need to run the following command via an Command Prompt. Make sure you start the Command Prompt with the Administrator option.
-    - `dotnet publish --configuration Release --runtime win-x64 --output "<path>"`
-    - The `<path>` is the directory where you will be serving the website from.
+
+### Building from Source
+
+1. Clone this repository to your server:
+   ```bash
+   git clone https://github.com/stevecvar/passcore.git
+   cd passcore
+   ```
+
+2. Build and publish the application:
+   ```bash
+   dotnet publish --configuration Release --runtime win-x64 --output "<path>"
+   ```
+   - The `<path>` is the directory where you will be serving the website from.
+   - Make sure you run this command with Administrator privileges.
 1. Install the [.NET 8.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/8.0).
 1. Go to your *IIS Manager*, Right-click on *Application Pools* and select *Add Application Pool*.
 1. A dialog appears. Under Name enter **PassCore Application Pool**, Under .NET CLR Version select **No Managed Code** and finally, under Managed pipeline mode select **Integrated**. Click OK after all fields have been set.
@@ -112,21 +120,6 @@ PassCore has the following features:
 
 **NOTE:** If you have a previous version, you **can not** use the same `appsettings.json` file. Please update your settings manually editing the new file.
 
-## PowerShell Installer
-
-Use PowerShell to download and setup Passcore using the following command line, just make sure you have installed the [.NET 8.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/8.0) and enabled World Wide Web publishing service:
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/unosquare/passcore/master/Installer.ps1'))
-```
-
-Using the command shown above will install to the folder `C:\passcore` and using the HTTP Port 8080 with the default (localhost) binding. 
-
-If you want to customize your installation please download the [installer script](https://raw.githubusercontent.com/unosquare/passcore/master/Installer.ps1) and 
-the [IIS setup script](https://raw.githubusercontent.com/unosquare/passcore/master/IISSetup.ps1).
-
-**NOTE:** You need [PowerShell version 5 or better](https://docs.microsoft.com/en-us/powershell/scripting/setup/windows-powershell-system-requirements?view=powershell-6) 
-to execute the script.
 
 ## Linux
 We recommend use the docker image and redirect the traffic to nginx.
