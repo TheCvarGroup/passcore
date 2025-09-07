@@ -1,4 +1,5 @@
-import { FormGroup, TextField } from '@mui/material';
+import { FormGroup, TextField, InputAdornment, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import * as React from 'react';
 import { GlobalContext } from '../Provider/GlobalContext';
 import { IChangePasswordFormInitialModel, IChangePasswordFormProps } from '../types/Components';
@@ -25,9 +26,21 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
     ReCaptchaToken,
 }: IChangePasswordFormProps) => {
     const [fields, setFields] = React.useState({ ...defaultState });
+    const [showPasswords, setShowPasswords] = React.useState({
+        current: false,
+        new: false,
+        verify: false
+    });
     
     const handleChange = (field: string, value: string) => {
         setFields(prev => ({ ...prev, [field]: value }));
+    };
+
+    const togglePasswordVisibility = (field: 'current' | 'new' | 'verify') => {
+        setShowPasswords(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
     };
 
     const { changePasswordForm, errorsPasswordForm, usePasswordGeneration, useEmail, showPasswordMeter, recaptcha } =
@@ -113,7 +126,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 id="CurrentPassword"
                 name="CurrentPassword"
                 onChange={(e) => handleChange('CurrentPassword', e.target.value)}
-                type="password"
+                type={showPasswords.current ? 'text' : 'password'}
                 value={fields.CurrentPassword}
                 sx={{
                     height: '20px',
@@ -121,6 +134,19 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 }}
                 fullWidth={true}
                 required
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle current password visibility"
+                                onClick={() => togglePasswordVisibility('current')}
+                                edge="end"
+                            >
+                                {showPasswords.current ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                }}
             />
             {usePasswordGeneration ? (
                 <PasswordGenerator value={fields.NewPassword} setValue={setGenerated} />
@@ -134,7 +160,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         id="NewPassword"
                         name="NewPassword"
                         onChange={(e) => handleChange('NewPassword', e.target.value)}
-                        type="password"
+                        type={showPasswords.new ? 'text' : 'password'}
                         value={fields.NewPassword}
                         sx={{
                             height: '20px',
@@ -142,6 +168,19 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         }}
                         fullWidth={true}
                         required
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle new password visibility"
+                                        onClick={() => togglePasswordVisibility('new')}
+                                        edge="end"
+                                    >
+                                        {showPasswords.new ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     {showPasswordMeter && <PasswordStrengthBar newPassword={fields.NewPassword} />}
                     <div
@@ -157,7 +196,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         id="NewPasswordVerify"
                         name="NewPasswordVerify"
                         onChange={(e) => handleChange('NewPasswordVerify', e.target.value)}
-                        type="password"
+                        type={showPasswords.verify ? 'text' : 'password'}
                         value={fields.NewPasswordVerify}
                         sx={{
                             height: '20px',
@@ -166,6 +205,19 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         fullWidth={true}
                         required
                         error={fields.NewPasswordVerify !== '' && fields.NewPasswordVerify !== fields.NewPassword}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password verification visibility"
+                                        onClick={() => togglePasswordVisibility('verify')}
+                                        edge="end"
+                                    >
+                                        {showPasswords.verify ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                 </>
             )}
