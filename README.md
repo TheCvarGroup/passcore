@@ -157,7 +157,7 @@ Here is where Pwned Password API comes into play. Pwned Passwords are more than 
 
 ## Password Disallowed Words
 
-PassCore includes a configurable password disallowed words feature that prevents users from using common, weak, or organization-specific words in their passwords. This feature is more flexible than the previous file-based approach and integrates seamlessly with the application configuration.
+PassCore includes a configurable password disallowed words feature that prevents users from using common, weak, or organization-specific words in their passwords.
 
 ### Configuration
 
