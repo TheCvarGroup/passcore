@@ -1,4 +1,4 @@
-import { FormGroup, TextField } from '@mui/material';
+import { FormGroup, TextField, Link } from '@mui/material';
 import * as React from 'react';
 import { GlobalContext } from '../Provider/GlobalContext';
 import { IChangePasswordFormInitialModel, IChangePasswordFormProps } from '../types/Components';
@@ -176,21 +176,21 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
             )}
 
             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                <button
-                    type="button"
+                <Link
+                    component="button"
+                    variant="body2"
                     onClick={togglePasswordVisibility}
-                    style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#1976d2',
-                        cursor: 'pointer',
-                        fontSize: '14px',
+                    sx={{
                         textDecoration: 'underline',
-                        fontFamily: 'inherit'
+                        cursor: 'pointer',
+                        border: 'none',
+                        background: 'none',
+                        fontFamily: 'inherit',
+                        fontSize: 'inherit'
                     }}
                 >
                     {showPasswords ? 'Hide Passwords' : 'Show Passwords'}
-                </button>
+                </Link>
             </div>
 
             {recaptcha.siteKey && recaptcha.siteKey !== '' && (
