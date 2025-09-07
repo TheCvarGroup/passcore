@@ -114,6 +114,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 onChange={(e) => handleChange('Username', e.target.value)}
                 value={fields.Username}
                 sx={{
+                    marginTop: '20px',
                     marginBottom: '30px',
                 }}
                 fullWidth={true}
