@@ -92,7 +92,7 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
             <Paper
                 style={{
                     borderRadius: '10px',
-                    height: '450px',
+                    height: '500px',
                     marginTop: '75px',
                     width: '650px',
                     zIndex: 1,
