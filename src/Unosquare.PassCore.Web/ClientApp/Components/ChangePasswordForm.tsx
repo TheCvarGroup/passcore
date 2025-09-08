@@ -107,7 +107,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 value={fields.Username}
                 sx={{
                     marginTop: '10px',
-                    marginBottom: '15px',
+                    marginBottom: '5px',
                 }}
                 fullWidth={true}
                 required
@@ -124,7 +124,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 type={showPassword ? 'text' : 'password'}
                 value={fields.CurrentPassword}
                 sx={{
-                    marginBottom: '15px',
+                    marginBottom: '5px',
                 }}
                 fullWidth={true}
                 required
@@ -180,7 +180,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
             )}
 
             {/* Checkbox to toggle password visibility */}
-            <label style={{ fontFamily: 'Roboto, Helvetica, Arial, sans-serif', fontSize: '14px' }}>
+            <label style={{ fontFamily: 'Roboto, Helvetica, Arial, sans-serif', fontSize: '14px', marginTop: '-20px' }}>
                 <input
                     type="checkbox"
                     checked={showPassword}
