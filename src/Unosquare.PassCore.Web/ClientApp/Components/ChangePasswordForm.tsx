@@ -93,6 +93,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
     };
 
     return (
+        <>
         <FormGroup row={false} style={{ width: '80%', margin: '15px 0 0 10%', gap: '20px' }}>
             <TextField
                 autoFocus={true}
@@ -175,27 +176,33 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 </>
             )}
 
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                <Link
-                    component="button"
-                    variant="body2"
-                    onClick={togglePasswordVisibility}
-                    sx={{
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
-                        border: 'none',
-                        background: 'none',
-                        fontFamily: 'inherit',
-                        fontSize: 'inherit'
-                    }}
-                >
-                    {showPasswords ? 'Hide Passwords' : 'Show Passwords'}
-                </Link>
-            </div>
-
             {recaptcha.siteKey && recaptcha.siteKey !== '' && (
                 <ReCaptcha setToken={setReCaptchaToken} shouldReset={false} />
             )}
         </FormGroup>
+        
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <Link
+                component="button"
+                type="button"
+                variant="body2"
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    togglePasswordVisibility();
+                }}
+                sx={{
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    border: 'none',
+                    background: 'none',
+                    fontFamily: 'inherit',
+                    fontSize: 'inherit'
+                }}
+            >
+                {showPasswords ? 'Hide Passwords' : 'Show Passwords'}
+            </Link>
+        </div>
+        </>
     );
 };
