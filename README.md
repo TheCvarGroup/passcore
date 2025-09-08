@@ -3,7 +3,7 @@
 
 ## Project Status & History
 
-**Important Note**: The original PassCore project was **archived by Unosquare in 2022** and is no longer actively maintained. This repository represents a **community-driven modernization effort** to bring a useful tool up to current 2025 standards. This fork is currently maintained by a single person so continued support will be best effort as my availability allows.
+**Important Note**: The original PassCore project was **[archived by Unosquare in 2023](https://github.com/unosquare/passcore)** and is no longer actively maintained. This repository represents a **community-driven modernization effort** to bring a useful tool up to current 2025 standards. This fork is currently maintained by a single person so continued support will be best effort as my availability allows.
 
 ### What This Fork Provides:
 -  **Complete modernization** to current technology standards
@@ -37,7 +37,7 @@ It allows users to change their Active Directory/LDAP password on their own, pro
 
 PassCore does not require any configuration, as it obtains the principal context from the current domain. The original version of this tool was downloaded around 8000 times in 2.5 years and was widely used in enterprise environments.
 
-**Note**: After Unosquare archived the project in 2022, this fork was created to modernize PassCore and ensure it remains viable for organizations that depend on it. The modernization effort brings the project up to current 2025 standards while maintaining full compatibility with existing deployments.
+**Note**: After Unosquare [archived the project in 2023](https://github.com/unosquare/passcore), this fork was created to modernize PassCore and ensure it remains viable for organizations that depend on it. The modernization effort brings the project up to current 2025 standards while maintaining full compatibility with existing deployments.
 
 ## 2025 Modernization
 
