@@ -93,7 +93,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
     };
 
     return (
-        <FormGroup row={false} style={{ width: '80%', margin: '15px 0 0 10%', gap: '20px' }}>
+        <FormGroup row={false} style={{ width: '80%', margin: '15px 0 0 10%', gap: '10px' }}>
             <TextField
                 autoFocus={true}
                 inputProps={{
@@ -106,8 +106,8 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 onChange={(e) => handleChange('Username', e.target.value)}
                 value={fields.Username}
                 sx={{
-                    marginTop: '20px',
-                    marginBottom: '30px',
+                    marginTop: '10px',
+                    marginBottom: '15px',
                 }}
                 fullWidth={true}
                 required
@@ -124,7 +124,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 type={showPassword ? 'text' : 'password'}
                 value={fields.CurrentPassword}
                 sx={{
-                    marginBottom: '30px',
+                    marginBottom: '15px',
                 }}
                 fullWidth={true}
                 required

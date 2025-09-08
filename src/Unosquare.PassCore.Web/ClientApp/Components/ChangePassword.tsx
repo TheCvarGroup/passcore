@@ -85,14 +85,14 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
         setReset(true);
     };
 
-    const marginButton = recaptcha.siteKey && recaptcha.siteKey !== '' ? '40px 0 0 180px' : '40px 0 0 180px';
+    const marginButton = recaptcha.siteKey && recaptcha.siteKey !== '' ? '20px 0 0 180px' : '20px 0 0 180px';
 
     return (
         <>
             <Paper
                 style={{
                     borderRadius: '10px',
-                    height: '550px',
+                    height: '450px',
                     marginTop: '75px',
                     width: '650px',
                     zIndex: 1,
