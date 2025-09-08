@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PwnedPasswordsSearch;
 // Based on https://github.com/mikepound/pwned-search/blob/master/csharp/pwned-search.cs
@@ -17,50 +19,67 @@ public static class PwnedSearch
     /// </summary>
     /// <param name="plaintext">Password to check against Pwned Passwords API</param>
     /// <returns>True when the password has been Pwned</returns>
-    public static bool IsPwnedPassword(string plaintext)
+    public static async Task<bool> IsPwnedPasswordAsync(string plaintext)
     {
+        if (string.IsNullOrEmpty(plaintext))
+            return false;
+
         try
         {
-            SHA1 sha = new SHA1CryptoServiceProvider();
-            byte[] data = sha.ComputeHash(Encoding.UTF8.GetBytes(plaintext));
+            // Use modern SHA1.Create() instead of obsolete SHA1CryptoServiceProvider
+            using var sha1 = SHA1.Create();
+            byte[] data = sha1.ComputeHash(Encoding.UTF8.GetBytes(plaintext));
 
             // Loop through each byte of the hashed data and format each one as a hexadecimal string.
             var sBuilder = new StringBuilder();
             foreach (var t in data)
-                sBuilder.Append(t.ToString("x2"));
+                sBuilder.Append(t.ToString("x2", CultureInfo.InvariantCulture));
 
-            var result = sBuilder.ToString().ToUpper();
+            var result = sBuilder.ToString().ToUpperInvariant();
 
             // Get a list of all the possible password hashes where the first 5 bytes of the hash are the same
             var url = $"https://api.pwnedpasswords.com/range/{result[..5]}";
-            WebRequest request = WebRequest.Create(url);
-            using var response = request.GetResponse().GetResponseStream();
+
+            // Use modern HttpClient instead of obsolete WebRequest
+            using var httpClient = new HttpClient();
+            using var response = await httpClient.GetStreamAsync(url);
             using var reader = new StreamReader(response);
+
             // Iterate through all possible matches and compare the rest of the hash to see if there is a full match
-            // TODO: optimize-async this
             string hashToCheck = result[5..];
-            string line;
-            do
+            string? line;
+            while ((line = await reader.ReadLineAsync()) != null)
             {
-                line = reader.ReadLine();
-                if (line != null)
+                string[] parts = line.Split(':');
+                if (parts.Length >= 2 && parts[0] == hashToCheck) // This is a full match: plaintext compromised!!!!
                 {
-                    string[] parts = line.Split(':');
-                    if (parts[0] == hashToCheck) // This is a full match: plaintext compromised!!!!
-                    {
-                        System.Diagnostics.Debug.Print("The password '{plaintext}' is publicly known and can be used in dictionary attacks");
-                        return true;
-                    }
+                    System.Diagnostics.Debug.Print($"The password '{plaintext}' is publicly known and can be used in dictionary attacks");
+                    return true;
                 }
-            } while (line != null);
+            }
 
             // We've run through all the candidates and none of them is a full match
             return false; // This plaintext is not publicly known
+        }
+        catch (HttpRequestException)
+        {
+            // Network-related exceptions - safer to assume password is not pwned
+            return false;
         }
         catch (Exception)
         {
             // If any weird things happens, it is safer to suppose this plaintext is compromised (hence not to be used).
             return true; // Better safe than sorry.
         }
+    }
+
+    /// <summary>
+    /// Synchronous wrapper for IsPwnedPasswordAsync for backward compatibility
+    /// </summary>
+    /// <param name="plaintext">Password to check against Pwned Passwords API</param>
+    /// <returns>True when the password has been Pwned</returns>
+    public static bool IsPwnedPassword(string plaintext)
+    {
+        return IsPwnedPasswordAsync(plaintext).GetAwaiter().GetResult();
     }
 }
