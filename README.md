@@ -72,7 +72,7 @@ PassCore has the following features:
 - Responsive design that works on mobiles, tablets, and desktops.
 - Works with Windows/Linux servers.
 
-<img align="center" src="https://user-images.githubusercontent.com/25519413/63782596-39713d80-c8b1-11e9-84f0-eef7a06b447b.png"></img>
+<img align="center" src="https://github.com/stevecvar/passcore/raw/master/example.jpg"></img>
 
 ## Installation on IIS
 
