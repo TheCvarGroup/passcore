@@ -31,6 +31,7 @@ export const PasswordStrengthBar: React.FunctionComponent<IStrengthBarProps> = (
                 color: '#000000',
                 display: 'flex',
                 flexGrow: 1,
+                marginTop: '-10px',
                 '& .MuiLinearProgress-bar': {
                     backgroundColor: progressColor,
                 },
