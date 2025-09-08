@@ -1,24 +1,21 @@
 ![Passcore Logo](https://github.com/stevecvar/passcore/raw/master/src/Unosquare.PassCore.Web/ClientApp/assets/images/passcore-logo.png)
 # PassCore: A self-service password change utility for Active Directory
 
-*:star: Please star this project if you find it useful!*
+## Project Status & History
 
-## 📋 Project Status & History
-
-**Important Note**: The original PassCore project was **archived by Unosquare in 2022** and is no longer actively maintained. This repository represents a **community-driven modernization effort** to bring PassCore up to current 2025 standards.
+**Important Note**: The original PassCore project was **archived by Unosquare in 2022** and is no longer actively maintained. This repository represents a **community-driven modernization effort** to bring a useful tool up to current 2025 standards. This fork is currently maintained by a single person so continued support will be best effort as my availability allows.
 
 ### What This Fork Provides:
-- ✅ **Complete modernization** to current technology standards
-- ✅ **Security updates** and vulnerability patches
-- ✅ **Performance improvements** with modern tooling
-- ✅ **Continued support** for a valuable open-source tool
-- ✅ **MIT License maintained** - free for commercial and personal use
+-  **Complete modernization** to current technology standards
+-  **Security updates** and vulnerability patches
+-  **Performance improvements** with modern tooling
+-  **Additional features** - show/ hide password toggle and configurable password disallowed words list
 
 This fork ensures that PassCore remains viable and secure for organizations that depend on it for self-service password management.
 
-- [📋 Project Status & History](#-project-status--history)
+- [Project Status & History](#-project-status--history)
 - [Overview](#overview)
-  - [🚀 2025 Modernization](#-2025-modernization)
+  - [2025 Modernization](#-2025-modernization)
   - [Features](#features)
 - [Installation on IIS](#installation-on-iis)
 - [Docker](#docker)
@@ -42,22 +39,22 @@ PassCore does not require any configuration, as it obtains the principal context
 
 **Note**: After Unosquare archived the project in 2022, this fork was created to modernize PassCore and ensure it remains viable for organizations that depend on it. The modernization effort brings the project up to current 2025 standards while maintaining full compatibility with existing deployments.
 
-## 🚀 2025 Modernization
+## 2025 Modernization
 
 **PassCore v5.0.0** has been completely modernized for 2025 standards:
 
 ### Backend Modernization
-- ✅ **.NET 8 LTS** - Upgraded from .NET 6 to the latest LTS version
-- ✅ **Updated NuGet packages** - All dependencies updated to latest versions
-- ✅ **Modern C# features** - Using collection expressions and latest syntax
-- ✅ **Security audit** - No vulnerabilities found in any packages
+-  **.NET 8 LTS** - Upgraded from .NET 6 to the latest LTS version
+-  **Updated NuGet packages** - All dependencies updated to latest versions
+-  **Modern C# features** - Using collection expressions and latest syntax
+-  **Security audit** - No vulnerabilities found in any packages
 
 ### Frontend Modernization  
-- ✅ **React 18** - Upgraded from React 16.14.0
-- ✅ **MUI v6** - Replaced deprecated Material-UI v4 with modern MUI
-- ✅ **TypeScript 5.6** - Updated from TypeScript 4.2
-- ✅ **Vite bundler** - Replaced deprecated Parcel with modern Vite
-- ✅ **Modern build system** - Faster builds and better development experience
+-  **React 18** - Upgraded from React 16.14.0
+-  **MUI v6** - Replaced deprecated Material-UI v4 with modern MUI
+-  **TypeScript 5.6** - Updated from TypeScript 4.2
+-  **Vite bundler** - Replaced deprecated Parcel with modern Vite
+-  **Modern build system** - Faster builds and better development experience
 
 
 
@@ -72,9 +69,6 @@ PassCore has the following features:
 - Has a server-side password entropy meter
 - **🆕 Show/Hide Password Toggle** - Toggle visibility for all password fields to verify correct typing
 - **🆕 Password Disallowed Words** - Configurable list of words that cannot be used in passwords
-- **🆕 Modern UI Components** - Updated to MUI v6 with improved accessibility and design
-- **🆕 Enhanced Security** - Latest .NET 8 LTS with updated dependencies and security patches
-
 - Responsive design that works on mobiles, tablets, and desktops.
 - Works with Windows/Linux servers.
 
@@ -167,6 +161,7 @@ The password disallowed words feature is configured in the `appsettings.json` fi
       "Enabled": true,
       "CaseSensitive": false,
       "DisallowedWords": [
+	"yourcompanyname",
         "password",
         "123456",
         "qwerty",
