@@ -1,4 +1,4 @@
-import { FormGroup, TextField, Link } from '@mui/material';
+import { FormGroup, TextField } from '@mui/material';
 import * as React from 'react';
 import { GlobalContext } from '../Provider/GlobalContext';
 import { IChangePasswordFormInitialModel, IChangePasswordFormProps } from '../types/Components';
@@ -24,14 +24,14 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
     ReCaptchaToken,
 }: IChangePasswordFormProps) => {
     const [fields, setFields] = React.useState({ ...defaultState });
-    const [showPasswords, setShowPasswords] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
     
     const handleChange = (field: string, value: string) => {
         setFields(prev => ({ ...prev, [field]: value }));
     };
 
-    const togglePasswordVisibility = () => {
-        setShowPasswords(prev => !prev);
+    const handleTogglePassword = () => {
+        setShowPassword(!showPassword);
     };
 
     const { changePasswordForm, errorsPasswordForm, usePasswordGeneration, useEmail, showPasswordMeter, recaptcha } =
@@ -93,7 +93,6 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
     };
 
     return (
-        <>
         <FormGroup row={false} style={{ width: '80%', margin: '15px 0 0 10%', gap: '20px' }}>
             <TextField
                 autoFocus={true}
@@ -122,7 +121,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                 id="CurrentPassword"
                 name="CurrentPassword"
                 onChange={(e) => handleChange('CurrentPassword', e.target.value)}
-                type={showPasswords ? 'text' : 'password'}
+                type={showPassword ? 'text' : 'password'}
                 value={fields.CurrentPassword}
                 sx={{
                     marginBottom: '30px',
@@ -142,7 +141,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         id="NewPassword"
                         name="NewPassword"
                         onChange={(e) => handleChange('NewPassword', e.target.value)}
-                        type={showPasswords ? 'text' : 'password'}
+                        type={showPassword ? 'text' : 'password'}
                         value={fields.NewPassword}
                         sx={{
                             marginBottom: '30px',
@@ -164,7 +163,7 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
                         id="NewPasswordVerify"
                         name="NewPasswordVerify"
                         onChange={(e) => handleChange('NewPasswordVerify', e.target.value)}
-                        type={showPasswords ? 'text' : 'password'}
+                        type={showPassword ? 'text' : 'password'}
                         value={fields.NewPasswordVerify}
                         sx={{
                             marginBottom: '30px',
@@ -179,30 +178,16 @@ export const ChangePasswordForm: React.FunctionComponent<IChangePasswordFormProp
             {recaptcha.siteKey && recaptcha.siteKey !== '' && (
                 <ReCaptcha setToken={setReCaptchaToken} shouldReset={false} />
             )}
+
+            {/* Checkbox to toggle password visibility */}
+            <label style={{ fontFamily: 'Roboto, Helvetica, Arial, sans-serif', fontSize: '14px' }}>
+                <input
+                    type="checkbox"
+                    checked={showPassword}
+                    onChange={handleTogglePassword}
+                />{' '}
+                Show Passwords
+            </label>
         </FormGroup>
-        
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <Link
-                component="button"
-                type="button"
-                variant="body2"
-                onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    togglePasswordVisibility();
-                }}
-                sx={{
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                    border: 'none',
-                    background: 'none',
-                    fontFamily: 'inherit',
-                    fontSize: 'inherit'
-                }}
-            >
-                {showPasswords ? 'Hide Passwords' : 'Show Passwords'}
-            </Link>
-        </div>
-        </>
     );
 };
