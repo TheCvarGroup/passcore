@@ -12,8 +12,10 @@
 #   -LocalPath: Local path to the built application or extracted release
 #   -BackupPath: Path where backups will be stored (default: ".\backups")
 #   -CreateBackup: Create a backup before deploying
-#   -StopService: Stop the website and app pool before deploying
-#   -StartService: Start the website and app pool after deploying
+#   -StopService: Stop the website and app pool before deploying (default: true)
+#   -StartService: Start the website and app pool after deploying (default: true)
+#   -NoStopService: Skip stopping the service (overrides -StopService)
+#   -NoStartService: Skip starting the service (overrides -StartService)
 #   -WhatIf: Show what would be done without actually doing it
 #   -ReleaseUrl: Download and extract a specific release (e.g., "v1.0.1")
 #   -DownloadPath: Path to download releases to (default: ".\downloads")
@@ -32,7 +34,7 @@ param(
     [switch]$CreateBackup,
     
     [Parameter(Mandatory=$false)]
-    [switch]$StopService,
+    [switch]$StopService = $true,
     
     [Parameter(Mandatory=$false)]
     [string]$WebsiteName = "PassCore",
@@ -41,7 +43,13 @@ param(
     [string]$AppPoolName = "PassCore",
     
     [Parameter(Mandatory=$false)]
-    [switch]$StartService,
+    [switch]$StartService = $true,
+    
+    [Parameter(Mandatory=$false)]
+    [switch]$NoStopService,
+    
+    [Parameter(Mandatory=$false)]
+    [switch]$NoStartService,
     
     [Parameter(Mandatory=$false)]
     [switch]$WhatIf,
@@ -210,7 +218,7 @@ function Backup-CurrentDeployment {
 }
 
 function Stop-ApplicationService {
-    if (-not $StopService) {
+    if (-not $StopService -or $NoStopService) {
         return
     }
     
@@ -333,7 +341,7 @@ function Deploy-Files {
 }
 
 function Start-ApplicationService {
-    if (-not $StartService) {
+    if (-not $StartService -or $NoStartService) {
         return
     }
     
