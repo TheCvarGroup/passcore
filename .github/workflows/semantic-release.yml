@@ -39,6 +39,11 @@ jobs:
         npx semantic-release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Debug outputs
+      run: |
+        echo "new-release-published: ${{ steps.semantic-release.outputs.new-release-published }}"
+        echo "new-release-version: ${{ steps.semantic-release.outputs.new-release-version }}"
 
   build-windows:
     needs: semantic-release
