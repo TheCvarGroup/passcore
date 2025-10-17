@@ -1,4 +1,4 @@
-![Passcore Logo](https://github.com/stevecvar/passcore/raw/master/src/Unosquare.PassCore.Web/ClientApp/assets/images/passcore-logo.png)
+![Passcore Logo](https://github.com/TheCvarGroup/passcore/raw/master/src/Unosquare.PassCore.Web/ClientApp/assets/images/passcore-logo.png)
 # PassCore: A self-service password change utility for Active Directory
 
 ## Project Status & History
@@ -41,7 +41,7 @@ PassCore does not require any configuration, as it obtains the principal context
 
 ## 2025 Modernization
 
-**PassCore v5.0.0** has been completely modernized for 2025 standards:
+**PassCore v1.0.0+** has been completely modernized for 2025 standards:
 
 ### Backend Modernization
 -  **.NET 8 LTS** - Upgraded from .NET 6 to the latest LTS version
@@ -72,7 +72,7 @@ PassCore has the following features:
 - Responsive design that works on mobiles, tablets, and desktops.
 - Works with Windows/Linux servers.
 
-<img align="center" src="https://github.com/stevecvar/passcore/raw/master/example.jpg"></img>
+<img align="center" src="https://github.com/TheCvarGroup/passcore/raw/master/example.jpg"></img>
 
 ## Installation on IIS
 
@@ -82,11 +82,18 @@ PassCore has the following features:
     - Go to the *Start* menu, right-click on *Computer*, then select *Properties*
     - Make sure the *Domain* field contains the correct setting.
 
-### Building from Source
+### Option 1: Using Pre-built Releases (Recommended)
+
+1. Download the latest release from the [Releases page](https://github.com/TheCvarGroup/passcore/releases)
+2. Extract the `passcore-*.zip` file to your desired location
+3. The extracted folder contains all necessary files ready for deployment
+4. Skip to step 3 below to continue with IIS configuration
+
+### Option 2: Building from Source
 
 1. Clone this repository to your server:
    ```bash
-   git clone https://github.com/stevecvar/passcore.git
+   git clone https://github.com/TheCvarGroup/passcore.git
    cd passcore
    ```
 
@@ -97,17 +104,17 @@ PassCore has the following features:
    - The `<path>` is the directory where you will be serving the website from.
    - Make sure you run this command with Administrator privileges.
    - **Note**: Node.js and npm are required during the build process to compile the frontend assets, but can be removed from the server after deployment.
-1. Install the [.NET 8.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/8.0).
-1. Go to your *IIS Manager*, Right-click on *Application Pools* and select *Add Application Pool*.
-1. A dialog appears. Under Name enter **PassCore Application Pool**, Under .NET CLR Version select **No Managed Code** and finally, under Managed pipeline mode select **Integrated**. Click OK after all fields have been set.
-1. Now, right-click on the application pool you just created in the previous step and select *Advanced Settings ...*. Change the *Start Mode* to **AlwaysRunning**, and the *Idle Time-out (minutes)* to **0**. Click on *OK*. This will ensure PassCore stays responsive even after long periods of inactivity.
-1. Back on your *IIS Manager*, right-click on *Sites* and select *Add Website*
-1. A dialog appears. Under *Site name*, enter **PassCore Website**. Under *Application pool* click on *Select* and ensure you select **PassCore Application Pool**. Under *Physical path*, click on the ellipsis *(...)*, navigate to the folder where you extracted PassCore.
+3. Install the [.NET 8.0 Windows Server Hosting bundle](https://dotnet.microsoft.com/download/dotnet/8.0).
+4. Go to your *IIS Manager*, Right-click on *Application Pools* and select *Add Application Pool*.
+5. A dialog appears. Under Name enter **PassCore Application Pool**, Under .NET CLR Version select **No Managed Code** and finally, under Managed pipeline mode select **Integrated**. Click OK after all fields have been set.
+6. Now, right-click on the application pool you just created in the previous step and select *Advanced Settings ...*. Change the *Start Mode* to **AlwaysRunning**, and the *Idle Time-out (minutes)* to **0**. Click on *OK*. This will ensure PassCore stays responsive even after long periods of inactivity.
+7. Back on your *IIS Manager*, right-click on *Sites* and select *Add Website*
+8. A dialog appears. Under *Site name*, enter **PassCore Website**. Under *Application pool* click on *Select* and ensure you select **PassCore Application Pool**. Under *Physical path*, click on the ellipsis *(...)*, navigate to the folder where you extracted PassCore.
     - **Important:** Make sure the Physical path points to the *parent* folder which is the one containing the files, *logs* and *wwwroot* folders.
     - **NOTE:** If the folder `logs` is not there you can created. To enable the logs you need to change `stdoutLogEnabled` to `true` in the `web.config` file. You need to add *Full Control* permissions to your IIS Application Pool account (see Troubleshooting).
-1. Under the *Binding section* of the same dialog, configure the *Type* to be **https**, set *IP Address* to **All Unassigned**, the *Port* to **443** and the *Hostname* to something like **password.yourdomain.com**. Under *SSL Certificate* select a certificate that matches the Hostname you provided above. If you don't know how to install a certificate, please refer to [SSL Certificate Install on IIS 8](https://www.digicert.com/ssl-certificate-installation-microsoft-iis-8.htm) or [SSL Certificate Install on IIS 10](https://www.digicert.com/csr-creation-ssl-installation-iis-10.htm) , in order to install a proper certificate.
+9. Under the *Binding section* of the same dialog, configure the *Type* to be **https**, set *IP Address* to **All Unassigned**, the *Port* to **443** and the *Hostname* to something like **password.yourdomain.com**. Under *SSL Certificate* select a certificate that matches the Hostname you provided above. If you don't know how to install a certificate, please refer to [SSL Certificate Install on IIS 8](https://www.digicert.com/ssl-certificate-installation-microsoft-iis-8.htm) or [SSL Certificate Install on IIS 10](https://www.digicert.com/csr-creation-ssl-installation-iis-10.htm) , in order to install a proper certificate.
     - **Important:** Do not serve this website without an SSL certificate because requests and responses will be transmitted in cleartext and an attacker could easily retrieve these messages and collect usernames and passwords.
-1. Click *OK* and navigate to `https://password.yourdomain.com` (the hostname you previously set). If all is set then you should be able to see the PassCore tool show up in your browser.
+10. Click *OK* and navigate to `https://password.yourdomain.com` (the hostname you previously set). If all is set then you should be able to see the PassCore tool show up in your browser.
 
 **NOTE:** If you have a previous version, you **can not** use the same `appsettings.json` file. Please update your settings manually editing the new file.
 
