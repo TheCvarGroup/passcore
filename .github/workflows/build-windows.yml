@@ -1,17 +1,14 @@
 name: Build Windows Release
 
 on:
-  push:
-    tags:
-      - 'v*'  # Triggers on version tags like v1.0.0
+  repository_dispatch:
+    types: [release-created]
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag name to build (e.g., v1.1.11)'
+        description: 'Tag name to build (e.g., v1.1.13)'
         required: true
-        default: 'v1.1.11'
-  repository_dispatch:
-    types: [release-created]
+        default: 'v1.1.13'
 
 jobs:
   build-windows:
