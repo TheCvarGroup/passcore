@@ -47,6 +47,9 @@ param(
     [switch]$WhatIf,
     
     [Parameter(Mandatory=$false)]
+    [switch]$BuildFromSource,
+    
+    [Parameter(Mandatory=$false)]
     [string]$ReleaseUrl,
     
     [Parameter(Mandatory=$false)]
@@ -382,6 +385,13 @@ try {
         
         if (-not $downloadUrl) {
             Write-ColorOutput "ERROR: Could not find Windows release in latest version" $Red
+            Write-ColorOutput "Available assets:" $Yellow
+            $release.assets | ForEach-Object { Write-ColorOutput "  - $($_.name)" $Yellow }
+            Write-ColorOutput "" $Yellow
+            Write-ColorOutput "This might happen if:" $Yellow
+            Write-ColorOutput "  1. The release was just created and Windows binaries are still building" $Yellow
+            Write-ColorOutput "  2. The release doesn't include Windows binaries yet" $Yellow
+            Write-ColorOutput "  3. You can try using -LocalPath instead to deploy from local files" $Yellow
             exit 1
         }
         
