@@ -381,12 +381,23 @@ try {
     if ($ReleaseUrl) {
         # Download and extract release
         $release = Get-LatestRelease
-        $downloadUrl = $release.assets | Where-Object { $_.name -like "passcore-*-windows.zip" } | Select-Object -First 1 -ExpandProperty browser_download_url
+        # Try different patterns for Windows releases
+        $downloadUrl = $release.assets | Where-Object { 
+            $_.name -like "passcore-*-windows.zip" -or 
+            $_.name -like "passcore-*.zip" -or
+            $_.name -like "*-windows.zip" -or
+            $_.name -like "*.zip"
+        } | Select-Object -First 1 -ExpandProperty browser_download_url
         
         if (-not $downloadUrl) {
             Write-ColorOutput "ERROR: Could not find Windows release in latest version" $Red
+            Write-ColorOutput "Release: $($release.tag_name)" $Yellow
             Write-ColorOutput "Available assets:" $Yellow
-            $release.assets | ForEach-Object { Write-ColorOutput "  - $($_.name)" $Yellow }
+            if ($release.assets.Count -eq 0) {
+                Write-ColorOutput "  (No assets found)" $Yellow
+            } else {
+                $release.assets | ForEach-Object { Write-ColorOutput "  - $($_.name)" $Yellow }
+            }
             Write-ColorOutput "" $Yellow
             Write-ColorOutput "This might happen if:" $Yellow
             Write-ColorOutput "  1. The release was just created and Windows binaries are still building" $Yellow
