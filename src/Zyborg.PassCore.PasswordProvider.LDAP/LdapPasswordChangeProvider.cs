@@ -402,7 +402,7 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
             if (hoursSinceLastChange < minPasswordAge)
             {
                 var remainingHours = minPasswordAge - hoursSinceLastChange;
-                _logger.LogWarning($"Password age restriction violated. User must wait {remainingHours} more hours. Last changed: {lastPasswordSet.Value}, Required age: {minPasswordAge} hours");
+                _logger.LogWarning("Password age restriction violated. User must wait {RemainingHours} more hours. Required age: {MinPasswordAge} hours", remainingHours, minPasswordAge);
 
                 return new ApiErrorItem(ApiErrorCode.PasswordAgeRestriction,
                     $"Your password was recently changed by you or an admin and you must wait {remainingHours} hours until you can change it again.");

@@ -114,7 +114,7 @@ public class PasswordChangeProvider : IPasswordChangeProvider
         {
             var item = new ApiErrorItem(ApiErrorCode.ComplexPassword, passwordEx.Message);
 
-            _logger.LogWarning(item.Message, passwordEx);
+            _logger.LogWarning("Password change failed due to complexity requirements");
 
             return item;
         }
@@ -347,7 +347,7 @@ public class PasswordChangeProvider : IPasswordChangeProvider
             if (hoursSinceLastChange < minPasswordAge)
             {
                 var remainingHours = minPasswordAge - hoursSinceLastChange;
-                _logger.LogWarning($"Password age restriction violated. User must wait {remainingHours} more hours. Last changed: {userPrincipal.LastPasswordSet.Value}, Required age: {minPasswordAge} hours");
+                _logger.LogWarning("Password age restriction violated. User must wait {RemainingHours} more hours. Required age: {MinPasswordAge} hours", remainingHours, minPasswordAge);
 
                 return new ApiErrorItem(ApiErrorCode.PasswordAgeRestriction,
                     $"Your password was recently changed by you or an admin and you must wait {remainingHours} hours until you can change it again.");
