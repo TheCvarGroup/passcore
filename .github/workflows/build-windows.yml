@@ -7,9 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag name to build (e.g., v1.1.7)'
+        description: 'Tag name to build (e.g., v1.1.11)'
         required: true
-        default: 'v1.1.7'
+        default: 'v1.1.11'
+  repository_dispatch:
+    types: [release-created]
 
 jobs:
   build-windows:
@@ -61,6 +63,8 @@ jobs:
       run: |
         if ("${{ github.event_name }}" -eq "workflow_dispatch") {
           $version = "${{ github.event.inputs.tag_name }}"
+        } elseif ("${{ github.event_name }}" -eq "repository_dispatch") {
+          $version = "${{ github.event.client_payload.tag }}"
         } else {
           $version = "${{ github.ref_name }}"
         }
