@@ -1,10 +1,12 @@
 name: SonarCloud Analysis
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    types: [opened, synchronize, reopened]
+  # Temporarily disabled - enable when SONAR_TOKEN secret is configured
+  # push:
+  #   branches:
+  #     - master
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   build:
