@@ -18,6 +18,7 @@ This fork ensures that PassCore remains viable and secure for organizations that
   - [2025 Modernization](#-2025-modernization)
   - [Features](#features)
 - [Installation on IIS](#installation-on-iis)
+  - [Automated Deployment](#automated-deployment-powershell-script)
 - [Docker](#docker)
 - [Linux](#linux)
 - [LDAP Provider](#ldap-provider)
@@ -84,6 +85,16 @@ PassCore has the following features:
 
 ### Option 1: Using Pre-built Releases (Recommended)
 
+#### Automated Deployment (PowerShell Script)
+1. Download the deployment script from the [scripts folder](scripts/)
+2. Run the PowerShell deployment script:
+   ```powershell
+   .\scripts\Deploy-PassCore.ps1 -ServerPath "C:\inetpub\wwwroot\PassCore" -ReleaseUrl "latest" -CreateBackup -StopService -StartService
+   ```
+3. Configure your `appsettings.json` file
+4. Set up SSL certificate in IIS Manager
+
+#### Manual Deployment
 1. Download the latest release from the [Releases page](https://github.com/TheCvarGroup/passcore/releases)
 2. Extract the `passcore-*.zip` file to your desired location
 3. The extracted folder contains all necessary files ready for deployment
@@ -111,7 +122,7 @@ PassCore has the following features:
 7. Back on your *IIS Manager*, right-click on *Sites* and select *Add Website*
 8. A dialog appears. Under *Site name*, enter **PassCore Website**. Under *Application pool* click on *Select* and ensure you select **PassCore Application Pool**. Under *Physical path*, click on the ellipsis *(...)*, navigate to the folder where you extracted PassCore.
     - **Important:** Make sure the Physical path points to the *parent* folder which is the one containing the files, *logs* and *wwwroot* folders.
-    - **NOTE:** If the folder `logs` is not there you can created. To enable the logs you need to change `stdoutLogEnabled` to `true` in the `web.config` file. You need to add *Full Control* permissions to your IIS Application Pool account (see Troubleshooting).
+    - **NOTE:** If the folder `logs` is not there you can create it. To enable the logs you need to change `stdoutLogEnabled` to `true` in the `web.config` file. You need to add *Full Control* permissions to your IIS Application Pool account (see Troubleshooting).
 9. Under the *Binding section* of the same dialog, configure the *Type* to be **https**, set *IP Address* to **All Unassigned**, the *Port* to **443** and the *Hostname* to something like **password.yourdomain.com**. Under *SSL Certificate* select a certificate that matches the Hostname you provided above. If you don't know how to install a certificate, please refer to [SSL Certificate Install on IIS 8](https://www.digicert.com/ssl-certificate-installation-microsoft-iis-8.htm) or [SSL Certificate Install on IIS 10](https://www.digicert.com/csr-creation-ssl-installation-iis-10.htm) , in order to install a proper certificate.
     - **Important:** Do not serve this website without an SSL certificate because requests and responses will be transmitted in cleartext and an attacker could easily retrieve these messages and collect usernames and passwords.
 10. Click *OK* and navigate to `https://password.yourdomain.com` (the hostname you previously set). If all is set then you should be able to see the PassCore tool show up in your browser.
