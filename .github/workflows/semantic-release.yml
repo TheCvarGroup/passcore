@@ -91,11 +91,7 @@ jobs:
         Compress-Archive -Path "./publish/*" -DestinationPath "passcore-${{ needs.semantic-release.outputs.new-release-version }}-windows.zip"
         
     - name: Upload release assets
-      uses: actions/upload-release-asset@v1
+      run: |
+        gh release upload ${{ needs.semantic-release.outputs.new-release-version }} passcore-${{ needs.semantic-release.outputs.new-release-version }}-windows.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.semantic-release.outputs.upload_url }}
-        asset_path: ./passcore-${{ needs.semantic-release.outputs.new-release-version }}-windows.zip
-        asset_name: passcore-${{ needs.semantic-release.outputs.new-release-version }}-windows.zip
-        asset_content_type: application/zip
