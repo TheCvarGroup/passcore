@@ -438,7 +438,7 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
             {
                 var entry = searchResults.Next();
                 var minPwdAgeValue = entry.GetAttribute("minPwdAge")?.StringValue;
-                
+
                 if (minPwdAgeValue == null)
                 {
                     return 0;
@@ -446,7 +446,7 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
 
                 // Convert from 100-nanosecond intervals to hours
                 var minPwdAgeTicks = Convert.ToInt64(minPwdAgeValue);
-                
+
                 if (minPwdAgeTicks == 0)
                 {
                     return 0; // No age restriction
@@ -454,7 +454,7 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
 
                 // Convert from 100-nanosecond intervals to hours
                 var minPwdAgeHours = (int)(Math.Abs(minPwdAgeTicks) / TimeSpan.TicksPerHour);
-                
+
                 _logger.LogDebug($"Domain minimum password age: {minPwdAgeHours} hours");
                 return minPwdAgeHours;
             }
@@ -489,7 +489,7 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
             {
                 var entry = searchResults.Next();
                 var pwdLastSetValue = entry.GetAttribute("pwdLastSet")?.StringValue;
-                
+
                 if (pwdLastSetValue != null && long.TryParse(pwdLastSetValue, out var pwdLastSetTicks))
                 {
                     // Convert from 100-nanosecond intervals since January 1, 1601 UTC

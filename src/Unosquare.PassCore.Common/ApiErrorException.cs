@@ -11,6 +11,24 @@ public class ApiErrorException : Exception
     /// <summary>
     /// Initializes a new instance of the <see cref="ApiErrorException"/> class.
     /// </summary>
+    public ApiErrorException() : base() => ErrorCode = ApiErrorCode.Generic;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiErrorException"/> class.
+    /// </summary>
+    /// <param name="message">The message.</param>
+    public ApiErrorException(string message) : base(message) => ErrorCode = ApiErrorCode.Generic;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiErrorException"/> class.
+    /// </summary>
+    /// <param name="message">The message.</param>
+    /// <param name="innerException">The inner exception.</param>
+    public ApiErrorException(string message, Exception innerException) : base(message, innerException) => ErrorCode = ApiErrorCode.Generic;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiErrorException"/> class.
+    /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="errorCode">The error code.</param>
     public ApiErrorException(string message, ApiErrorCode errorCode = ApiErrorCode.Generic)

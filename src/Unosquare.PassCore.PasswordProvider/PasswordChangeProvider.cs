@@ -325,7 +325,7 @@ public class PasswordChangeProvider : IPasswordChangeProvider
         {
             // Get the domain's minimum password age policy
             var minPasswordAge = GetDomainMinimumPasswordAge();
-            
+
             // If no minimum age is set, allow password change
             if (minPasswordAge <= 0)
             {

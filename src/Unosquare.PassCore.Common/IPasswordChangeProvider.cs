@@ -27,6 +27,9 @@ public interface IPasswordChangeProvider
     /// </returns>
     int MeasureNewPasswordDistance(string currentPassword, string newPassword)
     {
+        ArgumentNullException.ThrowIfNull(currentPassword);
+        ArgumentNullException.ThrowIfNull(newPassword);
+        
         var n = currentPassword.Length;
         var m = newPassword.Length;
         var d = new int[n + 1, m + 1];
