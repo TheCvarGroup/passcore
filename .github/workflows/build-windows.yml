@@ -21,6 +21,7 @@ jobs:
         echo "Tag: ${{ github.ref_name }}"
         echo "Ref: ${{ github.ref }}"
         echo "Event: ${{ github.event_name }}"
+        echo "Input tag: ${{ github.event.inputs.tag_name }}"
     
     - name: Checkout
       uses: actions/checkout@v4
@@ -56,18 +57,23 @@ jobs:
       
     - name: Set version info
       run: |
-        $version = "${{ github.ref_name }}"
+        if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+          $version = "${{ github.event.inputs.tag_name }}"
+        } else {
+          $version = "${{ github.ref_name }}"
+        }
         $buildDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
         echo "Version: $version" > version.txt
         echo "Build Date: $buildDate" >> version.txt
         echo "Build Environment: GitHub Actions" >> version.txt
+        echo "TAG_NAME=$version" >> $env:GITHUB_ENV
         
     - name: Create release archive
       run: |
-        Compress-Archive -Path "./publish/*" -DestinationPath "passcore-${{ github.ref_name }}-windows.zip"
+        Compress-Archive -Path "./publish/*" -DestinationPath "passcore-${{ env.TAG_NAME }}-windows.zip"
         
     - name: Upload release assets
       run: |
-        gh release upload ${{ github.ref_name }} passcore-${{ github.ref_name }}-windows.zip
+        gh release upload ${{ env.TAG_NAME }} passcore-${{ env.TAG_NAME }}-windows.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
