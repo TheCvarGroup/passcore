@@ -266,7 +266,23 @@ function Stop-ApplicationService {
     }
     catch {
         Write-ColorOutput "WARNING: Could not stop IIS application: $($_.Exception.Message)" $Yellow
-        Write-ColorOutput "You may need to manually stop the website and application pool in IIS Manager" $Yellow
+        Write-ColorOutput "Trying alternative method with iisreset..." $Yellow
+        
+        try {
+            # Try using iisreset as fallback
+            Write-ColorOutput "Stopping IIS using iisreset..." $Yellow
+            $result = & "iisreset" "/stop" 2>&1
+            if ($LASTEXITCODE -eq 0) {
+                Write-ColorOutput "IIS stopped successfully using iisreset" $Green
+                Start-Sleep -Seconds 5
+            } else {
+                Write-ColorOutput "WARNING: iisreset failed. You may need to manually stop IIS." $Yellow
+            }
+        } catch {
+            Write-ColorOutput "WARNING: Could not stop IIS using any method: $($_.Exception.Message)" $Yellow
+            Write-ColorOutput "You may need to manually stop the website and application pool in IIS Manager" $Yellow
+            Write-ColorOutput "Or run: iisreset /stop" $Yellow
+        }
     }
 }
 
@@ -286,11 +302,34 @@ function Deploy-Files {
         Write-ColorOutput "Created server directory: $ServerPath" $Green
     }
     
-    # Copy files
+    # Copy files with retry logic for locked files
     Write-ColorOutput "Copying files..." $Yellow
-    Copy-Item -Path "$LocalPath\*" -Destination $ServerPath -Recurse -Force
     
-    Write-ColorOutput "Files deployed successfully" $Green
+    $maxRetries = 3
+    $retryCount = 0
+    $copySuccess = $false
+    
+    do {
+        try {
+            Copy-Item -Path "$LocalPath\*" -Destination $ServerPath -Recurse -Force -ErrorAction Stop
+            $copySuccess = $true
+            Write-ColorOutput "Files deployed successfully" $Green
+        } catch {
+            $retryCount++
+            if ($retryCount -lt $maxRetries) {
+                Write-ColorOutput "WARNING: File copy failed (attempt $retryCount/$maxRetries): $($_.Exception.Message)" $Yellow
+                Write-ColorOutput "Waiting 5 seconds before retry..." $Yellow
+                Start-Sleep -Seconds 5
+            } else {
+                Write-ColorOutput "ERROR: File copy failed after $maxRetries attempts: $($_.Exception.Message)" $Red
+                Write-ColorOutput "This usually means files are still locked by IIS. Try:" $Yellow
+                Write-ColorOutput "1. Run: iisreset /stop" $Yellow
+                Write-ColorOutput "2. Wait a few seconds" $Yellow
+                Write-ColorOutput "3. Run the deployment script again" $Yellow
+                throw $_
+            }
+        }
+    } while (-not $copySuccess -and $retryCount -lt $maxRetries)
 }
 
 function Start-ApplicationService {
