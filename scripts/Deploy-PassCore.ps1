@@ -70,12 +70,20 @@ function Write-ColorOutput {
     Write-Host $Message -ForegroundColor $Color
 }
 
-function Get-LatestRelease {
-    Write-ColorOutput "Fetching latest release information..." $Blue
+function Get-Release {
+    param([string]$Version = "latest")
+    
+    if ($Version -eq "latest") {
+        Write-ColorOutput "Fetching latest release information..." $Blue
+        $url = "https://api.github.com/repos/TheCvarGroup/passcore/releases/latest"
+    } else {
+        Write-ColorOutput "Fetching release information for version: $Version" $Blue
+        $url = "https://api.github.com/repos/TheCvarGroup/passcore/releases/tags/$Version"
+    }
     
     try {
-        $releases = Invoke-RestMethod -Uri "https://api.github.com/repos/TheCvarGroup/passcore/releases/latest"
-        return $releases
+        $release = Invoke-RestMethod -Uri $url
+        return $release
     }
     catch {
         Write-ColorOutput "ERROR: Could not fetch release information: $($_.Exception.Message)" $Red
@@ -380,7 +388,7 @@ try {
     # Determine deployment source
     if ($ReleaseUrl) {
         # Download and extract release
-        $release = Get-LatestRelease
+        $release = Get-Release -Version $ReleaseUrl
         # Try different patterns for Windows releases
         $downloadUrl = $release.assets | Where-Object { 
             $_.name -like "passcore-*-windows.zip" -or 
