@@ -16,7 +16,7 @@ jobs:
         access_token: ${{ github.token }}
 
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         submodules: recursive
@@ -26,7 +26,9 @@ jobs:
         git config --global url."https://github.com/".insteadOf ssh://git@github.com/
 
     - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v2.0.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
 
     - name: Build Windows binaries with build_scripts\build_windows.ps1
       run: |
@@ -35,7 +37,7 @@ jobs:
         ls ${{ github.workspace }}\passcore_output\
 
     - name: Upload Windows binaries to artifacts
-      uses: actions/upload-artifact@v2.2.2
+      uses: actions/upload-artifact@v4
       with:
         name: passcore
         path: ${{ github.workspace }}\passcore_output\
