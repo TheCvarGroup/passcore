@@ -55,11 +55,7 @@ jobs:
         Compress-Archive -Path "./publish/*" -DestinationPath "passcore-${{ github.ref_name }}-windows.zip"
         
     - name: Upload release assets
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          passcore-${{ github.ref_name }}-windows.zip
-        tag_name: ${{ github.ref_name }}
-        make_latest: true
+      run: |
+        gh release upload ${{ github.ref_name }} passcore-${{ github.ref_name }}-windows.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
