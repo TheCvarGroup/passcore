@@ -26,9 +26,8 @@ public static class PwnedSearch
 
         try
         {
-            // Use modern SHA1.Create() instead of obsolete SHA1CryptoServiceProvider
-            using var sha1 = SHA1.Create();
-            byte[] data = sha1.ComputeHash(Encoding.UTF8.GetBytes(plaintext));
+            // Use modern SHA1.HashData() instead of ComputeHash for better performance
+            byte[] data = SHA1.HashData(Encoding.UTF8.GetBytes(plaintext));
 
             // Loop through each byte of the hashed data and format each one as a hexadecimal string.
             var sBuilder = new StringBuilder();
@@ -42,7 +41,7 @@ public static class PwnedSearch
 
             // Use modern HttpClient instead of obsolete WebRequest
             using var httpClient = new HttpClient();
-            using var response = await httpClient.GetStreamAsync(url);
+            using var response = await httpClient.GetStreamAsync(new Uri(url));
             using var reader = new StreamReader(response);
 
             // Iterate through all possible matches and compare the rest of the hash to see if there is a full match
@@ -64,6 +63,11 @@ public static class PwnedSearch
         catch (HttpRequestException)
         {
             // Network-related exceptions - safer to assume password is not pwned
+            return false;
+        }
+        catch (TaskCanceledException)
+        {
+            // Timeout exceptions - safer to assume password is not pwned
             return false;
         }
         catch (Exception)
