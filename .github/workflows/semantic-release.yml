@@ -44,3 +44,61 @@ jobs:
       run: |
         echo "new-release-published: ${{ steps.semantic-release.outputs.new-release-published }}"
         echo "new-release-version: ${{ steps.semantic-release.outputs.new-release-version }}"
+
+  build-windows:
+    needs: semantic-release
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'src/Unosquare.PassCore.Web/ClientApp/package-lock.json'
+        
+    - name: Restore .NET dependencies
+      run: dotnet restore
+      
+    - name: Build .NET solution
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Install npm dependencies
+      run: npm ci
+      working-directory: src/Unosquare.PassCore.Web/ClientApp
+      
+    - name: Build frontend
+      run: npm run build
+      working-directory: src/Unosquare.PassCore.Web/ClientApp
+      
+    - name: Publish .NET application
+      run: dotnet publish --configuration Release --no-build --output ./publish --self-contained false
+      
+    - name: Set version info
+      run: |
+        $version = "${{ needs.semantic-release.outputs.new-release-version }}"
+        $buildDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+        echo "Version: $version" > version.txt
+        echo "Build Date: $buildDate" >> version.txt
+        echo "Build Environment: GitHub Actions" >> version.txt
+        echo "TAG_NAME=$version" >> $env:GITHUB_ENV
+        
+    - name: Create release archive
+      run: |
+        Compress-Archive -Path "./publish/*" -DestinationPath "passcore-${{ env.TAG_NAME }}-windows.zip"
+        
+    - name: Upload release assets
+      run: |
+        gh release upload ${{ env.TAG_NAME }} passcore-${{ env.TAG_NAME }}-windows.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
