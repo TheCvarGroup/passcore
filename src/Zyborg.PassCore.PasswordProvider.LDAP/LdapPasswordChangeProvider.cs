@@ -378,7 +378,7 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
         {
             // Get the domain's minimum password age policy
             var minPasswordAge = GetDomainMinimumPasswordAge(ldap);
-            
+
             // If no minimum age is set, allow password change
             if (minPasswordAge <= 0)
             {
@@ -387,7 +387,7 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
 
             // Get user's last password set time
             var lastPasswordSet = GetUserLastPasswordSet(ldap, userDN);
-            
+
             if (lastPasswordSet == null)
             {
                 _logger.LogDebug("LastPasswordSet is null, allowing password change");
@@ -403,8 +403,8 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
             {
                 var remainingHours = minPasswordAge - hoursSinceLastChange;
                 _logger.LogWarning($"Password age restriction violated. User must wait {remainingHours} more hours. Last changed: {lastPasswordSet.Value}, Required age: {minPasswordAge} hours");
-                
-                return new ApiErrorItem(ApiErrorCode.PasswordAgeRestriction, 
+
+                return new ApiErrorItem(ApiErrorCode.PasswordAgeRestriction,
                     $"Your password was recently changed by you or an admin and you must wait {remainingHours} hours until you can change it again.");
             }
 

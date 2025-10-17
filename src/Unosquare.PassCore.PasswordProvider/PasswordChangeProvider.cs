@@ -348,8 +348,8 @@ public class PasswordChangeProvider : IPasswordChangeProvider
             {
                 var remainingHours = minPasswordAge - hoursSinceLastChange;
                 _logger.LogWarning($"Password age restriction violated. User must wait {remainingHours} more hours. Last changed: {userPrincipal.LastPasswordSet.Value}, Required age: {minPasswordAge} hours");
-                
-                return new ApiErrorItem(ApiErrorCode.PasswordAgeRestriction, 
+
+                return new ApiErrorItem(ApiErrorCode.PasswordAgeRestriction,
                     $"Your password was recently changed by you or an admin and you must wait {remainingHours} hours until you can change it again.");
             }
 
@@ -380,7 +380,7 @@ public class PasswordChangeProvider : IPasswordChangeProvider
 
             // Get the minPwdAge property (stored as a large integer representing 100-nanosecond intervals)
             var minPwdAgeValue = entry.Properties["minPwdAge"].Value;
-            
+
             if (minPwdAgeValue == null)
             {
                 return 0;
@@ -390,7 +390,7 @@ public class PasswordChangeProvider : IPasswordChangeProvider
             // The value is stored as a large integer where 0 means no restriction
             // and negative values represent the actual age restriction
             var minPwdAgeTicks = Convert.ToInt64(minPwdAgeValue);
-            
+
             if (minPwdAgeTicks == 0)
             {
                 return 0; // No age restriction
@@ -398,7 +398,7 @@ public class PasswordChangeProvider : IPasswordChangeProvider
 
             // Convert from 100-nanosecond intervals to hours
             var minPwdAgeHours = (int)(Math.Abs(minPwdAgeTicks) / TimeSpan.TicksPerHour);
-            
+
             _logger.LogDebug($"Domain minimum password age: {minPwdAgeHours} hours");
             return minPwdAgeHours;
         }
