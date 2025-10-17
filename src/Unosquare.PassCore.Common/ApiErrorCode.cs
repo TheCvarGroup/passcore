@@ -74,4 +74,9 @@ public enum ApiErrorCode
     /// The password contains disallowed words
     /// </summary>
     DisallowedPassword = 13,
+
+    /// <summary>
+    /// The password age restriction prevents changing password too soon
+    /// </summary>
+    PasswordAgeRestriction = 14,
 }

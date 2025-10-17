@@ -13,6 +13,7 @@ interface IAlerts {
     successAlertBody: string;
     successAlertTitle: string;
     errorPwnedPassword: string;
+    errorPasswordAgeRestriction: string;
 }
 
 interface IChangePasswordForm {

@@ -205,3 +205,6 @@ FakesAssemblies/
 # AOT results
 aot/*
 .DS_Store
+
+# Visual Studio Code workspace files
+*.code-workspace

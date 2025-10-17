@@ -49,6 +49,7 @@ public class Alerts
     public string? ErrorDistancePassword { get; set; }
     public string? ErrorPwnedPassword { get; set; }
     public string? ErrorDisallowedPassword { get; set; }
+    public string? ErrorPasswordAgeRestriction { get; set; }
 }
 
 public class ErrorsPasswordForm

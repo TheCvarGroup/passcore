@@ -89,6 +89,13 @@ public class PasswordChangeProvider : IPasswordChangeProvider
                 SetLastPassword(userPrincipal);
             }
 
+            // Check password age restriction
+            var passwordAgeError = ValidatePasswordAge(userPrincipal);
+            if (passwordAgeError != null)
+            {
+                return passwordAgeError;
+            }
+
             // Use always UPN for password check.
             if (!ValidateUserCredentials(userPrincipal.UserPrincipalName, currentPassword, principalContext))
             {
@@ -305,5 +312,100 @@ public class PasswordChangeProvider : IPasswordChangeProvider
             );
 
         return (int)entry.Properties["minPwdLength"].Value;
+    }
+
+    /// <summary>
+    /// Validates if the password age restriction allows changing the password.
+    /// </summary>
+    /// <param name="userPrincipal">The user principal to validate.</param>
+    /// <returns>An ApiErrorItem if password age restriction is violated, null otherwise.</returns>
+    private ApiErrorItem? ValidatePasswordAge(AuthenticablePrincipal userPrincipal)
+    {
+        try
+        {
+            // Get the domain's minimum password age policy
+            var minPasswordAge = GetDomainMinimumPasswordAge();
+            
+            // If no minimum age is set, allow password change
+            if (minPasswordAge <= 0)
+            {
+                return null;
+            }
+
+            // Check if LastPasswordSet is available
+            if (userPrincipal.LastPasswordSet == null)
+            {
+                _logger.LogDebug("LastPasswordSet is null, allowing password change");
+                return null;
+            }
+
+            // Calculate the time since last password change
+            var timeSinceLastChange = DateTime.UtcNow - userPrincipal.LastPasswordSet.Value;
+            var hoursSinceLastChange = (int)timeSinceLastChange.TotalHours;
+
+            // Check if enough time has passed
+            if (hoursSinceLastChange < minPasswordAge)
+            {
+                var remainingHours = minPasswordAge - hoursSinceLastChange;
+                _logger.LogWarning($"Password age restriction violated. User must wait {remainingHours} more hours. Last changed: {userPrincipal.LastPasswordSet.Value}, Required age: {minPasswordAge} hours");
+                
+                return new ApiErrorItem(ApiErrorCode.PasswordAgeRestriction, 
+                    $"Your password was recently changed by you or an admin and you must wait {remainingHours} hours until you can change it again.");
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Error validating password age, allowing password change");
+            return null; // If we can't validate, allow the change to proceed
+        }
+    }
+
+    /// <summary>
+    /// Gets the domain's minimum password age policy in hours.
+    /// </summary>
+    /// <returns>The minimum password age in hours, or 0 if not set or error occurs.</returns>
+    private int GetDomainMinimumPasswordAge()
+    {
+        try
+        {
+            DirectoryEntry entry = _options.UseAutomaticContext
+                ? Domain.GetCurrentDomain().GetDirectoryEntry()
+                : new DirectoryEntry(
+                    $"{_options.LdapHostnames.First()}:{_options.LdapPort}",
+                    _options.LdapUsername,
+                    _options.LdapPassword
+                );
+
+            // Get the minPwdAge property (stored as a large integer representing 100-nanosecond intervals)
+            var minPwdAgeValue = entry.Properties["minPwdAge"].Value;
+            
+            if (minPwdAgeValue == null)
+            {
+                return 0;
+            }
+
+            // Convert from 100-nanosecond intervals to hours
+            // The value is stored as a large integer where 0 means no restriction
+            // and negative values represent the actual age restriction
+            var minPwdAgeTicks = Convert.ToInt64(minPwdAgeValue);
+            
+            if (minPwdAgeTicks == 0)
+            {
+                return 0; // No age restriction
+            }
+
+            // Convert from 100-nanosecond intervals to hours
+            var minPwdAgeHours = (int)(Math.Abs(minPwdAgeTicks) / TimeSpan.TicksPerHour);
+            
+            _logger.LogDebug($"Domain minimum password age: {minPwdAgeHours} hours");
+            return minPwdAgeHours;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Error retrieving domain minimum password age policy");
+            return 0; // If we can't get the policy, assume no restriction
+        }
     }
 }

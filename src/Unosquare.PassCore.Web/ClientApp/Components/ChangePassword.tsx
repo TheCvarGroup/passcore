@@ -68,6 +68,12 @@ export const ChangePassword: React.FunctionComponent<{}> = () => {
                             case 12:
                                 errorAlertMessage += alerts.errorPwnedPassword;
                                 break;
+                            case 13:
+                                errorAlertMessage += alerts.errorDisallowedPassword;
+                                break;
+                            case 14:
+                                errorAlertMessage += alerts.errorPasswordAgeRestriction;
+                                break;
                         }
                     });
 

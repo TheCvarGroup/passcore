@@ -1,0 +1,23 @@
+{
+  "name": "passcore",
+  "version": "0.0.0-development",
+  "description": "A self-service password management tool for Active Directory",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheCvarGroup/passcore.git"
+  },
+  "keywords": [
+    "active-directory",
+    "password-management",
+    "self-service",
+    "ldap",
+    "dotnet"
+  ],
+  "author": "TheCvarGroup",
+  "license": "MIT",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1"
+  }
+}

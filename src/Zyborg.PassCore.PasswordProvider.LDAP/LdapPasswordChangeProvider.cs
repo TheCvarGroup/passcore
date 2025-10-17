@@ -108,6 +108,13 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
 
             var userDN = search.Next().Dn;
 
+            // Check password age restriction
+            var passwordAgeError = ValidatePasswordAge(ldap, userDN);
+            if (passwordAgeError != null)
+            {
+                return passwordAgeError;
+            }
+
             if (_options.LdapChangePasswordWithDelAdd)
             {
                 ChangePasswordDelAdd(currentPassword, newPassword, ldap, userDN);
@@ -358,4 +365,145 @@ public class LdapPasswordChangeProvider : IPasswordChangeProvider
                 X509ChainStatusFlags.UntrustedRoot when _options.LdapIgnoreTlsValidation => true,
                 _ => x.Status == X509ChainStatusFlags.NoError
             });
+
+    /// <summary>
+    /// Validates if the password age restriction allows changing the password.
+    /// </summary>
+    /// <param name="ldap">The LDAP connection.</param>
+    /// <param name="userDN">The user distinguished name.</param>
+    /// <returns>An ApiErrorItem if password age restriction is violated, null otherwise.</returns>
+    private ApiErrorItem? ValidatePasswordAge(ILdapConnection ldap, string userDN)
+    {
+        try
+        {
+            // Get the domain's minimum password age policy
+            var minPasswordAge = GetDomainMinimumPasswordAge(ldap);
+            
+            // If no minimum age is set, allow password change
+            if (minPasswordAge <= 0)
+            {
+                return null;
+            }
+
+            // Get user's last password set time
+            var lastPasswordSet = GetUserLastPasswordSet(ldap, userDN);
+            
+            if (lastPasswordSet == null)
+            {
+                _logger.LogDebug("LastPasswordSet is null, allowing password change");
+                return null;
+            }
+
+            // Calculate the time since last password change
+            var timeSinceLastChange = DateTime.UtcNow - lastPasswordSet.Value;
+            var hoursSinceLastChange = (int)timeSinceLastChange.TotalHours;
+
+            // Check if enough time has passed
+            if (hoursSinceLastChange < minPasswordAge)
+            {
+                var remainingHours = minPasswordAge - hoursSinceLastChange;
+                _logger.LogWarning($"Password age restriction violated. User must wait {remainingHours} more hours. Last changed: {lastPasswordSet.Value}, Required age: {minPasswordAge} hours");
+                
+                return new ApiErrorItem(ApiErrorCode.PasswordAgeRestriction, 
+                    $"Your password was recently changed by you or an admin and you must wait {remainingHours} hours until you can change it again.");
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Error validating password age, allowing password change");
+            return null; // If we can't validate, allow the change to proceed
+        }
+    }
+
+    /// <summary>
+    /// Gets the domain's minimum password age policy in hours.
+    /// </summary>
+    /// <param name="ldap">The LDAP connection.</param>
+    /// <returns>The minimum password age in hours, or 0 if not set or error occurs.</returns>
+    private int GetDomainMinimumPasswordAge(ILdapConnection ldap)
+    {
+        try
+        {
+            // Search for the domain root to get password policy
+            var searchResults = ldap.Search(
+                _options.LdapSearchBase,
+                LdapConnection.ScopeBase,
+                "(objectClass=domain)",
+                new[] { "minPwdAge" },
+                false);
+
+            if (searchResults.HasMore())
+            {
+                var entry = searchResults.Next();
+                var minPwdAgeValue = entry.GetAttribute("minPwdAge")?.StringValue;
+                
+                if (minPwdAgeValue == null)
+                {
+                    return 0;
+                }
+
+                // Convert from 100-nanosecond intervals to hours
+                var minPwdAgeTicks = Convert.ToInt64(minPwdAgeValue);
+                
+                if (minPwdAgeTicks == 0)
+                {
+                    return 0; // No age restriction
+                }
+
+                // Convert from 100-nanosecond intervals to hours
+                var minPwdAgeHours = (int)(Math.Abs(minPwdAgeTicks) / TimeSpan.TicksPerHour);
+                
+                _logger.LogDebug($"Domain minimum password age: {minPwdAgeHours} hours");
+                return minPwdAgeHours;
+            }
+
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Error retrieving domain minimum password age policy");
+            return 0; // If we can't get the policy, assume no restriction
+        }
+    }
+
+    /// <summary>
+    /// Gets the user's last password set time.
+    /// </summary>
+    /// <param name="ldap">The LDAP connection.</param>
+    /// <param name="userDN">The user distinguished name.</param>
+    /// <returns>The last password set time, or null if not available.</returns>
+    private DateTime? GetUserLastPasswordSet(ILdapConnection ldap, string userDN)
+    {
+        try
+        {
+            var searchResults = ldap.Search(
+                userDN,
+                LdapConnection.ScopeBase,
+                "(objectClass=*)",
+                new[] { "pwdLastSet" },
+                false);
+
+            if (searchResults.HasMore())
+            {
+                var entry = searchResults.Next();
+                var pwdLastSetValue = entry.GetAttribute("pwdLastSet")?.StringValue;
+                
+                if (pwdLastSetValue != null && long.TryParse(pwdLastSetValue, out var pwdLastSetTicks))
+                {
+                    // Convert from 100-nanosecond intervals since January 1, 1601 UTC
+                    var lastSet = DateTime.FromFileTimeUtc(pwdLastSetTicks);
+                    return lastSet;
+                }
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Error retrieving user last password set time");
+            return null;
+        }
+    }
 }
