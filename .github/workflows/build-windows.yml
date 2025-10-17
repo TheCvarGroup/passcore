@@ -1,14 +1,15 @@
 name: Build Windows Release
 
 on:
-  repository_dispatch:
-    types: [release-created]
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag name to build (e.g., v1.1.13)'
+        description: 'Tag name to build (e.g., v1.1.14)'
         required: true
-        default: 'v1.1.13'
+        default: 'v1.1.14'
 
 jobs:
   build-windows:
@@ -60,8 +61,6 @@ jobs:
       run: |
         if ("${{ github.event_name }}" -eq "workflow_dispatch") {
           $version = "${{ github.event.inputs.tag_name }}"
-        } elseif ("${{ github.event_name }}" -eq "repository_dispatch") {
-          $version = "${{ github.event.client_payload.tag }}"
         } else {
           $version = "${{ github.ref_name }}"
         }
