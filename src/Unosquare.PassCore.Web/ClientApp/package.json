@@ -23,6 +23,9 @@
         "url": "https://github.com/unosquare/passcore/issues"
     },
     "homepage": "https://github.com/unosquare/passcore",
+    "engines": {
+        "node": "^20.19.0 || >=22.12.0"
+    },
     "dependencies": {
         "@mui/material": "^6.1.6",
         "@mui/icons-material": "^6.1.6",

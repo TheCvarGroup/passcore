@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Install Node.js for frontend build
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
 WORKDIR /src
