@@ -13,8 +13,8 @@ jobs:
       issues: write
       pull-requests: write
     outputs:
-      new-release-published: ${{ steps.semantic-release.outputs.new-release-published }}
-      new-release-version: ${{ steps.semantic-release.outputs.new-release-version }}
+      new-release-published: ${{ steps.semantic.outputs.new_release_published }}
+      new-release-git-tag: ${{ steps.semantic.outputs.new_release_git_tag }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -27,26 +27,25 @@ jobs:
       with:
         node-version: '20'
         
-    - name: Install semantic release
-      run: |
-        npm install -g semantic-release@21
-        npm install -g @semantic-release/changelog
-        npm install -g @semantic-release/git
-        
     - name: Semantic Release
-      id: semantic-release
-      run: |
-        npx semantic-release
+      id: semantic
+      uses: cycjimmy/semantic-release-action@v4
+      with:
+        semantic_version: 21
+        extra_plugins: |
+          @semantic-release/changelog
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Debug outputs
+      if: always()
       run: |
-        echo "new-release-published: ${{ steps.semantic-release.outputs.new-release-published }}"
-        echo "new-release-version: ${{ steps.semantic-release.outputs.new-release-version }}"
+        echo "new-release-published: ${{ steps.semantic.outputs.new_release_published }}"
+        echo "new-release-git-tag: ${{ steps.semantic.outputs.new_release_git_tag }}"
 
   build-windows:
     needs: semantic-release
+    if: needs.semantic-release.outputs.new-release-published == 'true'
     runs-on: windows-latest
     permissions:
       contents: write
@@ -54,6 +53,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.semantic-release.outputs.new-release-git-tag }}
       
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -82,11 +83,11 @@ jobs:
       working-directory: src/Unosquare.PassCore.Web/ClientApp
       
     - name: Publish .NET application
-      run: dotnet publish --configuration Release --no-build --output ./publish --self-contained false
+      run: dotnet publish src/Unosquare.PassCore.Web/Unosquare.PassCore.Web.csproj --configuration Release --no-build --output ./publish --self-contained false
       
     - name: Set version info
       run: |
-        $version = "${{ needs.semantic-release.outputs.new-release-version }}"
+        $version = "${{ needs.semantic-release.outputs.new-release-git-tag }}"
         $buildDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
         echo "Version: $version" > version.txt
         echo "Build Date: $buildDate" >> version.txt
